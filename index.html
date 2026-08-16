@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -7,27 +7,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; user-select: none; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
+        body, html { width: 100vw; height: 100vh; overflow: hidden; background: #0f111a; color: #fff; }
 
-        /* PANTALLAS FLOTANTES DE INTERFAZ */
-        .screen { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(15, 17, 26, 0.95); }
+        /* PANTALLAS */
+        .screen { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0f111a; }
         .hidden { display: none !important; }
 
-        /* PANTALLA INICIO */
-        .title-main { font-size: 42px; font-weight: 900; color: #ff0055; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,0,85,0.6); margin-bottom: 20px; }
-        .btn-start { background: linear-gradient(90deg, #ff0055, #ff5500); border: none; padding: 15px 40px; border-radius: 50px; font-weight: 800; font-size: 18px; color: #fff; cursor: pointer; box-shadow: 0 10px 25px rgba(255,0,85,0.5); }
+        /* INICIO */
+        .title-main { font-size: 48px; font-weight: 900; color: #ff0055; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,0,85,0.6); margin-bottom: 25px; text-align: center; }
+        .btn-action { background: linear-gradient(90deg, #ff0055, #ff5500); border: none; padding: 16px 45px; border-radius: 50px; font-weight: 800; font-size: 18px; color: #fff; cursor: pointer; box-shadow: 0 8px 25px rgba(255,0,85,0.5); }
 
-        /* PALOMITA VERDE CREADOR */
-        .check-badge { font-size: 50px; display: none; margin-top: 10px; animation: pop 0.3s ease; }
-        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        /* CREADOR ESTILO TIENDA ALEGRE */
+        #screen-creator { background: linear-gradient(135deg, #1f1c2c, #928dab); justify-content: flex-start; padding: 20px; }
+        .creator-container { display: flex; width: 100%; height: 80%; margin-top: 10px; gap: 20px; }
+        .preview-box { flex: 1; background: rgba(255,255,255,0.1); border-radius: 20px; display: flex; justify-content: center; align-items: center; position: relative; }
+        .options-box { width: 320px; background: rgba(0,0,0,0.4); border-radius: 20px; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .input-field { width: 100%; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: #fff; outline: none; font-weight: 600; }
+        .input-field::placeholder { color: #ccc; }
+        .category-title { font-size: 14px; text-transform: uppercase; color: #ff0055; font-weight: 800; margin-top: 5px; }
 
-        /* JOYSTICK EN ESQUINA DERECHA */
-        #joystick-zone { position: absolute; bottom: 30px; right: 40px; width: 120px; height: 120px; background: rgba(255, 255, 255, 0.15); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; z-index: 5; touch-action: none; }
-        #joystick-knob { position: absolute; top: 35px; left: 35px; width: 50px; height: 50px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 15px #ff0055; }
+        /* ICONO TELÉFONO EN ESQUINA SUPERIOR DERECHA */
+        #phone-btn { position: absolute; top: 15px; right: 20px; z-index: 15; cursor: pointer; width: 55px; height: 55px; background: rgba(255,255,255,0.15); border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 28px; border: 2px solid rgba(255,255,255,0.3); }
 
-        /* HUD JUEGO */
-        .hud-bar { position: absolute; top: 15px; left: 20px; display: flex; gap: 20px; z-index: 5; background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .hud-item { font-size: 14px; font-weight: 800; }
+        /* INTERFAZ DEL TELÉFONO (VIDEOS REPRODUCIDOS) */
+        #phone-modal { position: absolute; inset: 40px 20px 20px auto; width: 320px; background: #161823; border-radius: 25px; border: 4px solid #333; z-index: 25; padding: 15px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .video-card { background: #222436; border-radius: 12px; padding: 10px; }
+        .video-title { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 5px; }
+        .video-stats { font-size: 11px; color: #aaa; display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .video-comments { font-size: 10px; color: #00ffcc; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 6px; max-height: 50px; overflow-y: auto; }
+
+        /* JOYSTICK FLOTANTE DERECHO */
+        #joystick-zone { position: absolute; bottom: 30px; right: 40px; width: 110px; height: 110px; background: rgba(255, 255, 255, 0.15); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; z-index: 10; touch-action: none; }
+        #joystick-knob { position: absolute; top: 32px; left: 32px; width: 46px; height: 46px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 15px #ff0055; }
+
+        /* BOTÓN DE CAMARA PARA GRABAR */
+        #cam-btn { position: absolute; bottom: 30px; left: 40px; z-index: 10; background: #ff0055; padding: 15px 25px; border-radius: 30px; border: none; color: #fff; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 5px 20px rgba(255,0,85,0.4); }
 
         #canvas-container { width: 100vw; height: 100vh; }
     </style>
@@ -35,96 +49,165 @@
 </head>
 <body>
 
-    <!-- 1. PANTALLA INICIO -->
+    <!-- PANTALLA INICIO -->
     <div id="screen-start" class="screen">
-        <h1 class="title-main">Youtubers World</h1>
-        <button class="btn-start" onclick="goToCreator()">COMENZAR</button>
+        <h1 class="title-main">Youtubers World_</h1>
+        <button class="btn-action" onclick="openCreator()">COMENZAR</button>
     </div>
 
-    <!-- 2. CREADOR DE PERSONAJE -->
+    <!-- PANTALLA CREADOR DE PERSONAJE -->
     <div id="screen-creator" class="screen hidden">
-        <h2>Crea tu Personaje</h2>
-        <br>
-        <button class="btn-start" onclick="confirmCharacter()">Confirmar Personaje</button>
-        <div id="creator-check" class="check-badge">✅</div>
+        <h2 style="font-weight: 900; text-transform: uppercase;">Tienda de Creación</h2>
+        <div class="creator-container">
+            <div class="preview-box">
+                <span style="font-size: 80px;">🧍</span>
+            </div>
+            <div class="options-box">
+                <div class="category-title">Datos del Canal</div>
+                <input type="text" id="creator-name" class="input-field" placeholder="Nombre del Creador">
+                <input type="text" id="channel-name" class="input-field" placeholder="Nombre del Canal">
+
+                <div class="category-title">Cuerpo</div>
+                <button class="input-field" onclick="setGender('female')">👩 Femenino (Suave)</button>
+                <button class="input-field" onclick="setGender('male')">👨 Masculino (Suave)</button>
+
+                <div class="category-title">Accesorios 3D</div>
+                <button class="input-field">🦩 Flotador Flamenco</button>
+                <button class="input-field">🦆 Patito de Goma</button>
+                <button class="input-field">👜 Bolso Pastel</button>
+
+                <button class="btn-action" style="margin-top: 15px;" onclick="finishCreator()">¡Comenzar Carrera! ✅</button>
+            </div>
+        </div>
     </div>
 
-    <!-- HUD DEL JUEGO -->
-    <div class="hud-bar">
-        <div class="hud-item">👥 Subs: <span id="subs-count">0</span></div>
-        <div class="hud-item">💰 Money: $<span id="money-count">0</span></div>
+    <!-- BOTÓN TELÉFONO SUPERIOR DERECHO -->
+    <div id="phone-btn" onclick="togglePhone()">📱</div>
+
+    <!-- MODAL DEL TELÉFONO CON VIDEOS -->
+    <div id="phone-modal" class="hidden">
+        <h3 style="font-size: 16px; font-weight: 800; color: #ff0055;"> Mis Videos Grabados</h3>
+        <div id="videos-list" style="overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-size: 12px; color: #888;">No has grabado videos aún. Acércate a la cámara y presiona "Grabar".</div>
+        </div>
     </div>
 
-    <!-- CONTENEDOR 3D -->
-    <div id="canvas-container"></div>
+    <!-- BOTÓN DE CÁMARA EN ESCENARIO -->
+    <button id="cam-btn" onclick="recordVideo()">📹 Grabar Video</button>
 
-    <!-- JOYSTICK FLOTANTE DERECHO -->
+    <!-- JOYSTICK DERECHO -->
     <div id="joystick-zone">
         <div id="joystick-knob"></div>
     </div>
 
+    <div id="canvas-container"></div>
+
 <script>
-    // FLUJO PANTALLAS
-    function goToCreator() {
+    // ESTADOS Y FLUJO
+    function openCreator() {
         document.getElementById('screen-start').classList.add('hidden');
         document.getElementById('screen-creator').classList.remove('hidden');
     }
 
-    function confirmCharacter() {
-        document.getElementById('creator-check').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('screen-creator').classList.add('hidden');
-            init3DGame();
-        }, 1200);
+    function setGender(type) {
+        // Ajuste de escala/fisionomía para el modelo 3D
+        if (playerMesh) {
+            if(type === 'female') playerMesh.scale.set(0.9, 0.95, 0.9);
+            else playerMesh.scale.set(1, 1, 1);
+        }
     }
 
-    // MOTOR 3D VISTA SUPERIOR
-    let scene, camera, renderer, player;
+    function finishCreator() {
+        document.getElementById('screen-creator').classList.add('hidden');
+        init3DWorld();
+    }
+
+    function togglePhone() {
+        document.getElementById('phone-modal').classList.toggle('hidden');
+    }
+
+    // MOTOR 3D Y ANIMACIONES
+    let scene, camera, renderer, playerGroup, playerMesh, leftLeg, rightLeg, leftArm, rightArm;
     let moveVector = { x: 0, z: 0 };
+    let isTalking = false;
+    let walkCycle = 0;
+    let videos = [];
 
-    function init3DGame() {
+    function init3DWorld() {
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0f111a);
+        scene.background = new THREE.Color(0x161823);
 
-        // Cámara Top-Down (Desde Arriba)
+        // Vista desde arriba en 3D
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 18, 12);
+        camera.position.set(0, 16, 12);
         camera.lookAt(0, 0, 0);
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Iluminación Profesional
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        // Luces suaves estilo Render 3D Plastificado
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xff0055, 0.8);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
         dirLight.position.set(10, 20, 10);
         scene.add(dirLight);
 
-        // Terreno inicial (Cisneros pequeño - Sección 1)
-        const floorGeo = new THREE.PlaneGeometry(12, 12);
-        const floorMat = new THREE.MeshStandardMaterial({ color: 0x1f2235, roughness: 0.4 });
+        // Escenario (Cisneros Pequeño - Habitación)
+        const floorGeo = new THREE.BoxGeometry(10, 0.4, 10);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x3a3d52, roughness: 0.3 });
         const floor = new THREE.Mesh(floorGeo, floorMat);
-        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = -0.2;
         scene.add(floor);
 
-        // Personaje Base (Se reemplazará con tus modelos 3D en PNG/GLTF)
-        const playerGroup = new THREE.Group();
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0xff0055 });
-        const pMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 1.8), bodyMat);
-        pMesh.position.y = 0.9;
-        playerGroup.add(pMesh);
-        
-        player = playerGroup;
-        scene.add(player);
+        // CÁMARA DE GRABACIÓN EN EL ESCENARIO
+        const camGroup = new THREE.Group();
+        const camBody = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.8, 0.8), new THREE.MeshStandardMaterial({ color: 0x222222 }));
+        const camLens = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.6), new THREE.MeshStandardMaterial({ color: 0x444444 }));
+        camLens.rotation.x = Math.PI / 2;
+        camLens.position.z = 0.5;
+        camGroup.add(camBody, camLens);
+        camGroup.position.set(0, 1, -3);
+        scene.add(camGroup);
+
+        // MODELO DE PERSONAJE 3D ARTICULADO (Cuerpo suave estilo Clay)
+        playerGroup = new THREE.Group();
+        const matBody = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, roughness: 0.2 });
+
+        // Cabeza
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.55, 32, 32), matBody);
+        head.position.y = 1.6;
+        playerGroup.add(head);
+
+        // Torso
+        playerMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.3, 0.9), matBody);
+        playerMesh.position.y = 0.95;
+        playerGroup.add(playerMesh);
+
+        // Brazos para hablar
+        const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.6);
+        leftArm = new THREE.Mesh(armGeo, matBody);
+        leftArm.position.set(-0.45, 1.1, 0);
+        rightArm = new THREE.Mesh(armGeo, matBody);
+        rightArm.position.set(0.45, 1.1, 0);
+        playerGroup.add(leftArm, rightArm);
+
+        // Piernas para caminar
+        const legGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.6);
+        leftLeg = new THREE.Mesh(legGeo, matBody);
+        leftLeg.position.set(-0.2, 0.3, 0);
+        rightLeg = new THREE.Mesh(legGeo, matBody);
+        rightLeg.position.set(0.2, 0.3, 0);
+        playerGroup.add(leftLeg, rightLeg);
+
+        scene.add(playerGroup);
 
         setupJoystick();
         animate();
     }
 
-    // LÓGICA JOYSTICK DERECHO
+    // CONTROLES JOYSTICK DERECHO
     function setupJoystick() {
         const zone = document.getElementById('joystick-zone');
         const knob = document.getElementById('joystick-knob');
@@ -134,37 +217,104 @@
         window.addEventListener('pointermove', (e) => { if(active) handleMove(e); });
         window.addEventListener('pointerup', () => {
             active = false;
-            knob.style.left = '35px';
-            knob.style.top = '35px';
+            knob.style.left = '32px';
+            knob.style.top = '32px';
             moveVector = { x: 0, z: 0 };
         });
 
         function handleMove(e) {
             const rect = zone.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            let dx = e.clientX - centerX;
-            let dy = e.clientY - centerY;
-            const dist = Math.min(Math.hypot(dx, dy), 40);
+            let dx = e.clientX - (rect.left + rect.width / 2);
+            let dy = e.clientY - (rect.top + rect.height / 2);
+            const dist = Math.min(Math.hypot(dx, dy), 35);
             const angle = Math.atan2(dy, dx);
 
-            knob.style.left = `${35 + Math.cos(angle) * dist}px`;
-            knob.style.top = `${35 + Math.sin(angle) * dist}px`;
+            knob.style.left = `${32 + Math.cos(angle) * dist}px`;
+            knob.style.top = `${32 + Math.sin(angle) * dist}px`;
 
-            moveVector.x = (Math.cos(angle) * dist) / 40;
-            moveVector.z = (Math.sin(angle) * dist) / 40;
+            moveVector.x = (Math.cos(angle) * dist) / 35;
+            moveVector.z = (Math.sin(angle) * dist) / 35;
         }
     }
 
+    // ACCIÓN DE GRABAR VIDEO FRENTE A LA CÁMARA
+    function recordVideo() {
+        isTalking = true;
+        // El personaje gira hacia la cámara
+        playerGroup.rotation.y = Math.PI;
+
+        setTimeout(() => {
+            isTalking = false;
+            const channel = document.getElementById('channel-name').value || 'Mi Canal';
+            const views = Math.floor(Math.random() * 500) + 50;
+            const likes = Math.floor(views * 0.8);
+            const dislikes = Math.floor(Math.random() * 10);
+            
+            videos.unshift({
+                title: `Video #${videos.length + 1} - ¡Mi Vida en ${channel}!`,
+                stats: `👁️ ${views} vistas | 👍 ${likes} | 👎 ${dislikes}`,
+                comments: `💬 Fan1: "¡Me encanta!" <br> 💬 Hater: "No me gustó tanto"`
+            });
+
+            renderVideos();
+            alert("¡Video grabado y guardado en tu teléfono!");
+        }, 3000);
+    }
+
+    function renderVideos() {
+        const list = document.getElementById('videos-list');
+        list.innerHTML = '';
+        videos.forEach(v => {
+            list.innerHTML += `
+                <div class="video-card">
+                    <div class="video-title">${v.title}</div>
+                    <div class="video-stats">${v.stats}</div>
+                    <div class="video-comments">${v.comments}</div>
+                </div>
+            `;
+        });
+    }
+
+    // ANIMACIÓN Y MOVIMIENTO EN TIEMPO REAL
     function animate() {
         requestAnimationFrame(animate);
 
-        if (player && (moveVector.x !== 0 || moveVector.z !== 0)) {
-            player.position.x += moveVector.x * 0.15;
-            player.position.z += moveVector.z * 0.15;
-            camera.position.x = player.position.x;
-            camera.position.z = player.position.z + 12;
+        const isMoving = moveVector.x !== 0 || moveVector.z !== 0;
+
+        if (isMoving) {
+            // Mover personaje
+            playerGroup.position.x += moveVector.x * 0.12;
+            playerGroup.position.z += moveVector.z * 0.12;
+            
+            // Orientación del cuerpo hacia donde camina
+            playerGroup.rotation.y = Math.atan2(moveVector.x, moveVector.z);
+
+            // Animación realista de piernas caminando
+            walkCycle += 0.2;
+            leftLeg.rotation.x = Math.sin(walkCycle) * 0.6;
+            rightLeg.rotation.x = -Math.sin(walkCycle) * 0.6;
+            leftArm.rotation.x = -Math.sin(walkCycle) * 0.4;
+            rightArm.rotation.x = Math.sin(walkCycle) * 0.4;
+
+            // Mantener cámara siguiendo al personaje
+            camera.position.x = playerGroup.position.x;
+            camera.position.z = playerGroup.position.z + 12;
+        } else {
+            // Reposo
+            leftLeg.rotation.x = 0;
+            rightLeg.rotation.x = 0;
+            if (!isTalking) {
+                leftArm.rotation.x = 0;
+                rightArm.rotation.x = 0;
+            }
+        }
+
+        // Animación de hablar y mover manos frente a la cámara
+        if (isTalking) {
+            const talkCycle = Date.now() * 0.01;
+            leftArm.rotation.z = Math.sin(talkCycle) * 0.5 + 0.5;
+            rightArm.rotation.z = -Math.cos(talkCycle) * 0.5 - 0.5;
+            leftArm.rotation.x = Math.sin(talkCycle) * 0.3;
         }
 
         renderer.render(scene, camera);
