@@ -3,237 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YouTuber Life Studio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <title>YouTuber Life Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
-        body { background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: #0d0f17; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
 
-        .game-card { background: #1e293b; width: 100%; max-width: 430px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; border: 2px solid #334155; }
+        .app-container { background: #161824; width: 100%; max-width: 420px; border-radius: 28px; border: 1px solid #2a2e45; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+
+        /* BARRA SUPERIOR PROFESIONAL */
+        .top-nav { background: #1f2235; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2e45; }
+        .stat-item { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; color: #a0a7c4; }
+        .stat-item b { color: #fff; font-size: 15px; }
+        .stat-money b { color: #10b981; }
+
+        /* SCENE Y HABITACIÓN CON IMAGEN REAL */
+        .scene-container { height: 260px; position: relative; background: url('https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=600&auto=format&fit=crop&q=80') center/cover; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; border-bottom: 2px solid #2a2e45; }
         
-        /* BARRA SUPERIOR */
-        .stats-bar { background: #0f172a; padding: 12px 15px; display: flex; justify-content: space-around; font-family: 'Fredoka One', cursive; font-size: 15px; border-bottom: 2px solid #334155; }
-        .stat-val { color: #facc15; }
+        .avatar-img { width: 140px; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.2s; }
+        .avatar-img:active { transform: scale(0.95); }
 
-        /* NAVEGACIÓN DE VISTAS */
-        .nav-tabs { display: flex; background: #0f172a; padding: 5px; gap: 5px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: #1e293b; color: #94a3b8; font-weight: 800; border-radius: 12px; cursor: pointer; font-size: 13px; transition: 0.2s; }
-        .tab-btn.active { background: #ff0055; color: white; }
+        /* BOTONES NAVEGACIÓN */
+        .tabs-menu { display: flex; background: #11131d; padding: 6px; gap: 6px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #7e85a3; font-weight: 600; border-radius: 12px; cursor: pointer; font-size: 12px; transition: 0.2s; }
+        .tab-btn.active { background: #ff0055; color: #fff; }
 
-        /* VISTAS */
-        .view-section { display: none; padding: 15px; flex-direction: column; gap: 15px; }
-        .view-section.active { display: flex; }
+        .content-area { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
 
-        /* AVATAR Y VESTIDOR */
-        .avatar-display { background: linear-gradient(180deg, #38bdf8 0%, #818cf8 100%); border-radius: 20px; height: 260px; display: flex; justify-content: center; align-items: center; position: relative; border: 3px solid #64748b; overflow: hidden; }
-        
-        .doll-body { width: 110px; height: 220px; position: relative; }
-        .doll-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+        /* CONTROLES Y SELECCIÓN */
+        .card-box { background: #1f2235; border-radius: 18px; padding: 14px; border: 1px solid #2a2e45; display: flex; flex-direction: column; gap: 10px; }
+        .card-title { font-size: 14px; font-weight: 800; color: #ff0055; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* TIENDA DE ROPA */
+        input, select { width: 100%; padding: 12px 14px; background: #11131d; border: 1px solid #2a2e45; border-radius: 12px; color: #fff; font-size: 13px; outline: none; }
+        input:focus, select:focus { border-color: #ff0055; }
+
+        .btn-submit { background: linear-gradient(90deg, #ff0055, #ff5500); color: #fff; border: none; padding: 13px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; text-align: center; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4); }
+        .btn-submit:active { transform: translateY(2px); }
+
+        /* COMENTARIOS REALISTAS */
+        .comments-feed { max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .comment-item { background: #11131d; padding: 10px 12px; border-radius: 12px; border: 1px solid #2a2e45; font-size: 12px; }
+        .comment-header { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; }
+        .comment-user { font-weight: 700; color: #38bdf8; }
+        .comment-user.hater { color: #ef4444; }
+        .comment-user.fan { color: #facc15; }
+        .comment-text { color: #d1d5db; line-height: 1.4; }
+
+        /* TIENDA DE OUTFITS */
         .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .shop-item { background: #0f172a; border: 2px solid #334155; border-radius: 16px; padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .shop-item span { font-size: 13px; font-weight: 800; color: #e2e8f0; }
-        .shop-btn { background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 10px; font-weight: 800; font-size: 12px; width: 100%; cursor: pointer; }
-        .shop-btn.equipped { background: #64748b; }
-
-        /* PANEL DE GRABACIÓN */
-        .panel-box { background: #0f172a; border-radius: 16px; padding: 15px; border: 1px solid #334155; display: flex; flex-direction: column; gap: 10px; }
-        .panel-title { font-family: 'Fredoka One', cursive; font-size: 16px; color: #ff0055; }
-
-        input { padding: 12px; background: #1e293b; border: 2px solid #334155; border-radius: 12px; color: white; font-size: 14px; outline: none; }
-        input:focus { border-color: #ff0055; }
-
-        .btn-action { background: #10b981; color: white; border: none; padding: 12px; border-radius: 12px; font-family: 'Fredoka One', cursive; font-size: 16px; cursor: pointer; box-shadow: 0 4px 0 #059669; }
-        .btn-action:active { transform: translateY(3px); box-shadow: none; }
-
-        /* FEED DE COMENTARIOS */
-        .comments-list { max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .comment-card { background: #1e293b; padding: 10px; border-radius: 10px; font-size: 12px; border-left: 4px solid #10b981; }
-        .comment-card.hate { border-left-color: #ef4444; }
-        .comment-user { font-weight: 800; color: #facc15; margin-bottom: 2px; }
+        .shop-card { background: #11131d; border: 1px solid #2a2e45; border-radius: 14px; padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .shop-card img { width: 60px; height: 60px; object-fit: contain; }
+        .shop-card span { font-size: 12px; font-weight: 600; }
+        .btn-buy { background: #10b981; border: none; color: white; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 11px; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="game-card">
-    <!-- BARRA SUPERIOR DE ESTADÍSTICAS -->
-    <div class="stats-bar">
-        <div>👥 <span id="stat-subs" class="stat-val">0</span> Subs</div>
-        <div>👁️ <span id="stat-views" class="stat-val">0</span> Vistas</div>
-        <div>💰 $<span id="stat-money" class="stat-val">50</span></div>
+<div class="app-container">
+    <!-- BARRA DE ESTADÍSTICAS -->
+    <div class="top-nav">
+        <div class="stat-item">👥 <b id="stat-subs">0</b></div>
+        <div class="stat-item">👁️ <b id="stat-views">0</b></div>
+        <div class="stat-item stat-money">💰 $<b id="stat-money">100</b></div>
     </div>
 
-    <!-- PESTAÑAS PARA MOVER AL PERSONAJE -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchView('studio')">🎬 Grabación</button>
-        <button class="tab-btn" onclick="switchView('shop')">🛍️ Tienda de Ropa</button>
+    <!-- PESTAÑAS -->
+    <div class="tabs-menu">
+        <button class="tab-btn active" onclick="switchTab('studio')">🎬 ESTUDIO</button>
+        <button class="tab-btn" onclick="switchTab('shop')">🛍️ TIENDA</button>
     </div>
 
-    <!-- VISTA 1: STUDIO Y GRABACIÓN -->
-    <div id="view-studio" class="view-section active">
-        <div class="avatar-display">
-            <div class="doll-body">
-                <svg viewBox="0 0 100 200" class="doll-layer">
-                    <!-- CUERPO -->
-                    <circle cx="50" cy="35" r="20" fill="#fbcfe8"/>
-                    <rect x="42" y="55" width="16" height="60" rx="8" fill="#fbcfe8"/>
-                    <rect x="36" y="110" width="10" height="70" rx="5" fill="#fbcfe8"/>
-                    <rect x="54" y="110" width="10" height="70" rx="5" fill="#fbcfe8"/>
-                    <!-- OJOS Y SONRISA -->
-                    <circle cx="43" cy="32" r="2.5" fill="#1e293b"/>
-                    <circle cx="57" cy="32" r="2.5" fill="#1e293b"/>
-                    <path d="M 45 42 Q 50 47 55 42" stroke="#1e293b" stroke-width="2" fill="none"/>
-                </svg>
-                <!-- CABELLO -->
-                <svg id="layer-hair" viewBox="0 0 100 200" class="doll-layer">
-                    <path d="M 25 35 C 25 10, 75 10, 75 35 C 80 60, 75 90, 70 100 C 65 70, 70 35, 50 25 C 30 35, 35 70, 30 100 C 25 90, 20 60, 25 35 Z" fill="#475569"/>
-                </svg>
-                <!-- ROPA -->
-                <svg id="layer-clothes" viewBox="0 0 100 200" class="doll-layer">
-                    <path d="M 38 60 L 62 60 L 68 105 L 32 105 Z" fill="#ec4899"/>
-                </svg>
-            </div>
+    <!-- SECCIÓN ESTUDIO DE GRABACIÓN -->
+    <div id="tab-studio" class="content-area">
+        <div class="scene-container" id="scene-bg">
+            <img id="avatar-display" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Laura1&top[]=longHair&hairColor[]=brown&clothing[]=overall" class="avatar-img" alt="Avatar">
         </div>
 
-        <div class="panel-box">
-            <div class="panel-title">📹 Publicar Nuevo Video</div>
-            <input type="text" id="video-title" placeholder="Escribe el título de tu video...">
-            <button class="btn-action" onclick="publishVideo()">🚀 PUBLICAR</button>
+        <div class="card-box">
+            <div class="card-title">📹 Grabar Nuevo Video</div>
+            <select id="video-category">
+                <option value="vlog">Vlog de mi día a día</option>
+                <option value="fashion">GRWM / Moda y Maquillaje</option>
+                <option value="gameplay">Gameplay / Gaming</option>
+                <option value="storytime">Storytime / Experiencias</option>
+            </select>
+            <input type="text" id="video-title" placeholder="Escribe un título llamativo...">
+            <button class="btn-submit" onclick="publishVideo()">PUBLICAR VIDEO</button>
         </div>
 
-        <div class="panel-box">
-            <div class="panel-title">💬 Comentarios de la Comunidad</div>
-            <div id="comments-list" class="comments-list">
-                <div class="comment-card"><div class="comment-user">Sistema</div>¡Escribe un título original para recibir buenos comentarios!</div>
+        <div class="card-box">
+            <div class="card-title">💬 Comentarios en Vivo</div>
+            <div id="comments-feed" class="comments-feed">
+                <div class="comment-item">
+                    <div class="comment-header"><span class="comment-user">YouTube Bot</span><span>Ahora</span></div>
+                    <div class="comment-text">¡Sube tu primer video para empezar a interactuar con tus seguidores!</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- VISTA 2: TIENDA DE ROPA -->
-    <div id="view-shop" class="view-section">
-        <div class="panel-title" style="text-align: center;">🛍️ Tienda de Outfits</div>
+    <!-- SECCIÓN TIENDA DE VESTUARIO -->
+    <div id="tab-shop" class="content-area" style="display:none;">
+        <div class="card-title" style="text-align: center;">👗 Boutique de Creadores</div>
         <div class="shop-grid">
-            <div class="shop-item">
-                <div style="width:40px; height:40px; background:#ec4899; border-radius:10px;"></div>
-                <span>Vestido Rosa</span>
-                <button class="shop-btn equipped" onclick="equipOutfit('#ec4899')">Puesto</button>
+            <div class="shop-card">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Outfit1&top[]=longHair&clothing[]=shirtCrewNeck" alt="Outfit 1">
+                <span>Look Casual Chic</span>
+                <button class="btn-buy" onclick="changeOutfit('Laura1', 'overall')">Puesto</button>
             </div>
-            <div class="shop-item">
-                <div style="width:40px; height:40px; background:#8b5cf6; border-radius:10px;"></div>
-                <span>Outfit Morado</span>
-                <button id="btn-buy-1" class="shop-btn" onclick="buyOutfit(1, '#8b5cf6', 30)">Comprar $30</button>
+            <div class="shop-card">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Outfit2&top[]=bob&clothing[]=hoodie" alt="Outfit 2">
+                <span>Hoodie Streamer</span>
+                <button class="btn-buy" onclick="buyOutfit('Outfit2', 'hoodie', 40)">Comprar $40</button>
             </div>
-            <div class="shop-item">
-                <div style="width:40px; height:40px; background:#06b6d4; border-radius:10px;"></div>
-                <span>Top Turquesa</span>
-                <button id="btn-buy-2" class="shop-btn" onclick="buyOutfit(2, '#06b6d4', 60)">Comprar $60</button>
-            </div>
-            <div class="shop-item">
-                <div style="width:40px; height:40px; background:#f59e0b; border-radius:10px;"></div>
-                <span>Vestido Dorado VIP</span>
-                <button id="btn-buy-3" class="shop-btn" onclick="buyOutfit(3, '#f59e0b', 100)">Comprar $100</button>
+            <div class="shop-card">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Outfit3&top[]=curly&clothing[]=dress" alt="Outfit 3">
+                <span>Vestido Glam</span>
+                <button class="btn-buy" onclick="buyOutfit('Outfit3', 'dress', 80)">Comprar $80</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    let stats = { subs: 0, views: 0, money: 50 };
-    let ownedOutfits = [0];
+    let stats = { subs: 0, views: 0, money: 100 };
+    let inventory = ['Laura1'];
 
-    function switchView(viewName) {
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    // BANCO GIGANTE DE COMENTARIOS REALISTAS POR CATEGORÍA
+    const COMMENT_DATABASE = {
+        vlog: {
+            good: [
+                "¡Amé completamente este vlog! Me transmite una paz increíble 💖",
+                "Amo la vibra de tus videos, literalmente haces que mi día mejore ✨",
+                "¡Qué buena edición! Me quedé pegada viendo todo el video 👏",
+                "Por favor haz una segunda parte pronto, me encantó este formato 🔥",
+                "El mejor canal de vlogs definitivamente, nuevo sub ❤️"
+            ],
+            bad: [
+                "Siento que este vlog estuvo súper aburrido y sin sentido 🥱",
+                "Mucha transición innecesaria y poco contenido interesante...",
+                "Perdiste la esencia de los videos anteriores, me desuscribo 📉",
+                "La calidad del audio estuvo bastante mala en algunas partes."
+            ]
+        },
+        fashion: {
+            good: [
+                "¡Uff qué estilazo! Necesito saber de dónde es ese outfit 😍",
+                "Tu gusto para combinar ropa es 10/10, me diste muchísimas ideas ✨",
+                "¡Quedaste hermosísima! Me encantó la parte del maquillaje 💕",
+                "Ese color te queda espectacular, sube más contenido de moda 🔥"
+            ],
+            bad: [
+                "Esos colores no combinan para nada, se ve rarísimo 😅",
+                "Contenido súper repetitivo que ya se ha visto mil veces en YouTube...",
+                "No me gustó para nada el maquillaje, esperaba algo más elaborado."
+            ]
+        },
+        gameplay: {
+            good: [
+                "¡Jajaja me reí muchísimo con tus reacciones! 😂🔥",
+                "Tienes muchísima habilidad, deberías hacer directos jugando 🎮",
+                "¡Qué buena partida! Apoyo total a este tipo de videos 👍",
+                "Brooo esa jugada del final estuvo brutal 🔥🚀"
+            ],
+            bad: [
+                "Súper aburrido cómo juegas, deberías practicar más 👎",
+                "El juego se veía súper trabado, arregla la calidad...",
+                "No entendí nada de lo que hiciste en la partida 🥱"
+            ]
+        },
+        storytime: {
+            good: [
+                "¡NO PUEDO CREER LO QUE TE PASÓ! Quedé en shock 😱😱",
+                "Tienes una forma de contar las cosas que atrapa desde el segundo 1 👏",
+                "Necesito Parte 2 YA MISMO por favor jajaja ❤️",
+                "La mejor historia que he escuchado esta semana 🔥"
+            ],
+            bad: [
+                "Esa historia suena súper inventada e exagerada 🙄",
+                "Le diste mil vueltas al asunto para contar algo super simple...",
+                "Mucho clickbait en el título para lo que terminó siendo el video 📉"
+            ]
+        }
+    };
 
-        document.getElementById(`view-${viewName}`).classList.add('active');
+    const USERNAMES = ["Sofia_Gamer", "Valen_Vlogs", "Camila_R", "Martina_Style", "Diego_Play", "Dani_Beauty", "Xx_Hater99_xX", "Lucas_22", "Belleza_Fans", "Caro_Studio"];
+
+    function switchTab(tabName) {
+        document.getElementById('tab-studio').style.display = tabName === 'studio' ? 'flex' : 'none';
+        document.getElementById('tab-shop').style.display = tabName === 'shop' ? 'flex' : 'none';
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
     }
 
-    function equipOutfit(color) {
-        document.getElementById('layer-clothes').querySelector('path').setAttribute('fill', color);
+    function changeOutfit(seed, clothing) {
+        const url = `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&top[]=longHair&hairColor[]=brown&clothing[]=${clothing}`;
+        document.getElementById('avatar-display').src = url;
     }
 
-    function buyOutfit(id, color, price) {
-        if (ownedOutfits.includes(id)) {
-            equipOutfit(color);
+    function buyOutfit(seed, clothing, price) {
+        if (inventory.includes(seed)) {
+            changeOutfit(seed, clothing);
             return;
         }
 
         if (stats.money >= price) {
             stats.money -= price;
-            ownedOutfits.push(id);
-            document.getElementById(`btn-buy-${id}`).innerText = "Equipar";
-            document.getElementById(`btn-buy-${id}`).style.background = "#3b82f6";
-            equipOutfit(color);
+            inventory.push(seed);
+            changeOutfit(seed, clothing);
             updateStats();
         } else {
-            alert("¡No tienes suficiente dinero! Sigue grabando videos para ganar más.");
+            alert("¡No tienes suficiente dinero! Sigue publicando videos para monetizar.");
         }
     }
 
     function publishVideo() {
-        const input = document.getElementById('video-title');
-        const title = input.value.trim();
+        const titleInput = document.getElementById('video-title');
+        const category = document.getElementById('video-category').value;
+        const title = titleInput.value.trim();
 
-        // Si pone solo puntos o textos muy cortos
         if (!title || title.length < 3 || /^[\.\s]+$/.test(title)) {
-            let lossSubs = Math.floor(Math.random() * 5) + 3;
-            stats.subs = Math.max(0, stats.subs - lossSubs);
+            let loss = Math.floor(Math.random() * 8) + 4;
+            stats.subs = Math.max(0, stats.subs - loss);
             
-            addComment("Hater_01", "¡Qué video tan malo! Ni siquiera le pusiste un título de verdad. 😡", true);
-            addComment("Fan_Decepcionado", "Perdiste un suscriptor, sube algo mejor la próxima. 📉", true);
+            addComment("Critico_Strict", "¡Qué falta de respeto! Ni siquiera le pusiste un título decente al video. Perdiste seguidores. 😡", "hater");
             updateStats();
-            input.value = '';
+            titleInput.value = '';
             return;
         }
 
-        // Sistema dinámico de respuestas variadas
-        const isCritical = Math.random() < 0.35; // 35% de probabilidad de recibir críticas
+        const isHated = Math.random() < 0.3; // 30% de probabilidad de recibir críticas
 
-        if (isCritical) {
-            let gainViews = Math.floor(Math.random() * 80) + 20;
-            let lossSubs = Math.floor(Math.random() * 4) + 1;
+        if (isHated) {
+            let gainViews = Math.floor(Math.random() * 90) + 10;
+            let lossSubs = Math.floor(Math.random() * 6) + 1;
 
             stats.views += gainViews;
             stats.subs = Math.max(0, stats.subs - lossSubs);
 
-            const badComments = [
-                `No me gustó mucho este video de "${title}", se sintió aburrido. 👎`,
-                `Siento que la calidad bajó un poco en este video... 💔`,
-                `Esperaba algo más divertido sobre ${title}.`
-            ];
-            let randBad = badComments[Math.floor(Math.random() * badComments.length)];
-            addComment("Critico_YT", randBad, true);
+            const badList = COMMENT_DATABASE[category].bad;
+            const text = badList[Math.floor(Math.random() * badList.length)];
+            const user = USERNAMES[Math.floor(Math.random() * USERNAMES.length)];
+
+            addComment(user, text, "hater");
         } else {
-            let gainViews = Math.floor(Math.random() * 300) + 100;
-            let gainSubs = Math.floor(gainViews / 6);
-            let gainMoney = Math.floor(gainViews * 0.15);
+            let gainViews = Math.floor(Math.random() * 400) + 120;
+            let gainSubs = Math.floor(gainViews / 7);
+            let gainMoney = Math.floor(gainViews * 0.18);
 
             stats.views += gainViews;
             stats.subs += gainSubs;
             stats.money += gainMoney;
 
-            const goodComments = [
-                `¡Me encantan tus videos sobre ${title}! Tienes mucho talento ✨`,
-                `¡Nuevo sub! Me reí muchísimo con este video ❤️`,
-                `¡Qué buena edición! Sigue subiendo contenido así 🚀`,
-                `Amé totalmente este video sobre ${title} 🔥`
-            ];
-            let randGood = goodComments[Math.floor(Math.random() * goodComments.length)];
-            addComment("Suscriptor_Fiel", randGood, false);
+            const goodList = COMMENT_DATABASE[category].good;
+            const text = goodList[Math.floor(Math.random() * goodList.length)];
+            const user = USERNAMES[Math.floor(Math.random() * USERNAMES.length)];
+
+            addComment(user, text, "fan");
         }
 
         updateStats();
-        input.value = '';
+        titleInput.value = '';
     }
 
-    function addComment(user, text, isHate) {
-        const list = document.getElementById('comments-list');
-        const card = document.createElement('div');
-        card.className = `comment-card ${isHate ? 'hate' : ''}`;
-        card.innerHTML = `<div class="comment-user">${user}</div>${text}`;
-        list.prepend(card);
+    function addComment(user, text, type) {
+        const feed = document.getElementById('comments-feed');
+        const item = document.createElement('div');
+        item.className = 'comment-item';
+        
+        item.innerHTML = `
+            <div class="comment-header">
+                <span class="comment-user ${type}">${user}</span>
+                <span style="color:#6b7280;">Hace 1m</span>
+            </div>
+            <div class="comment-text">${text}</div>
+        `;
+        feed.prepend(item);
     }
 
     function updateStats() {
