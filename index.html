@@ -1,48 +1,50 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
-<head> 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Youtubers World_</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800;900&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
         body, html { width: 100vw; height: 100vh; overflow: hidden; background: #0f111a; color: #fff; }
 
-        /* PANTALLAS PRINCIPALES */
-        .screen { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0f111a; }
+        .screen { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .hidden { display: none !important; }
 
-        /* 1. PANTALLA INICIO */
-        .title-main { font-size: 46px; font-weight: 900; color: #ff0055; text-transform: uppercase; text-shadow: 0 0 25px rgba(255,0,85,0.7); margin-bottom: 25px; text-align: center; }
-        .btn-action { background: linear-gradient(90deg, #ff0055, #ff5500); border: none; padding: 16px 45px; border-radius: 50px; font-weight: 800; font-size: 18px; color: #fff; cursor: pointer; box-shadow: 0 8px 25px rgba(255,0,85,0.5); }
+        /* PANTALLA INICIO */
+        #screen-start { background: radial-gradient(circle, #2b1055 0%, #0f111a 100%); z-index: 30; }
+        .title-main { font-size: 42px; font-weight: 900; color: #ff0055; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,0,85,0.6); margin-bottom: 25px; text-align: center; }
+        .btn-action { background: linear-gradient(90deg, #ff0055, #ff5500); border: none; padding: 18px 50px; border-radius: 50px; font-weight: 800; font-size: 20px; color: #fff; cursor: pointer; box-shadow: 0 8px 25px rgba(255,0,85,0.5); }
         .btn-action:active { transform: scale(0.95); }
 
-        /* 2. TIENDA Y CREADOR ALEGRE */
-        #screen-creator { background: linear-gradient(135deg, #1f1c2c, #928dab); justify-content: flex-start; padding: 20px; }
-        .creator-container { display: flex; width: 100%; height: 80%; margin-top: 10px; gap: 20px; }
-        .preview-box { flex: 1; background: rgba(255,255,255,0.1); border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px dashed rgba(255,255,255,0.3); }
-        .options-box { width: 320px; background: rgba(0,0,0,0.5); border-radius: 20px; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .input-field { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.15); color: #fff; outline: none; font-weight: 600; font-size: 13px; }
-        .input-field::placeholder { color: #ddd; }
-        .category-title { font-size: 13px; text-transform: uppercase; color: #ff0055; font-weight: 800; margin-top: 5px; }
+        /* TIENDA Y CREADOR ALEGRE */
+        #screen-creator { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #a1c4fd 100%); justify-content: flex-start; padding: 15px; z-index: 20; }
+        .creator-title { font-size: 22px; font-weight: 900; color: #2d132c; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(255,255,255,0.5); }
 
-        /* HUD DEL TELÉFONO (ESQUINA SUPERIOR DERECHA) */
-        #phone-btn { position: absolute; top: 15px; right: 20px; z-index: 15; cursor: pointer; width: 55px; height: 55px; background: rgba(255,255,255,0.15); border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 28px; border: 2px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px); }
+        .creator-container { display: flex; width: 100%; height: 85%; gap: 15px; }
+        
+        /* ESCENARIO DEL PERSONAJE */
+        .preview-box { flex: 1.2; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border-radius: 25px; border: 3px solid #fff; display: flex; justify-content: center; align-items: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .character-avatar { height: 85%; width: auto; filter: drop-shadow(0 15px 20px rgba(0,0,0,0.2)); transition: all 0.3s ease; }
 
-        /* MODAL DEL TELÉFONO */
-        #phone-modal { position: absolute; top: 80px; right: 20px; width: 310px; max-height: 420px; background: #161823; border-radius: 25px; border: 3px solid #333; z-index: 25; padding: 15px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
-        .video-card { background: #222436; border-radius: 12px; padding: 10px; border: 1px solid rgba(255,255,255,0.05); }
-        .video-title { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 4px; }
-        .video-stats { font-size: 11px; color: #bbb; display: flex; justify-content: space-between; margin-bottom: 6px; }
-        .video-comments { font-size: 10px; color: #00ffcc; background: rgba(0,0,0,0.4); padding: 6px; border-radius: 8px; max-height: 60px; overflow-y: auto; }
+        /* PANEL DE OPCIONES DE LA TIENDA */
+        .options-box { flex: 1; background: rgba(20, 20, 35, 0.85); backdrop-filter: blur(15px); border-radius: 25px; border: 2px solid rgba(255,255,255,0.2); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .input-field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #fff; outline: none; font-weight: 600; font-size: 13px; }
+        .category-title { font-size: 12px; text-transform: uppercase; color: #ff0055; font-weight: 800; margin-top: 5px; }
 
-        /* JOYSTICK FLOTANTE (ESQUINA INFERIOR DERECHA) */
-        #joystick-zone { position: absolute; bottom: 25px; right: 35px; width: 110px; height: 110px; background: rgba(255, 255, 255, 0.15); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; z-index: 10; touch-action: none; }
+        .grid-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .opt-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; text-align: center; }
+        .opt-btn.active, .opt-btn:active { background: #ff0055; border-color: #ff0055; }
+
+        /* HUD Y JUEGO */
+        #phone-btn { position: absolute; top: 15px; right: 20px; z-index: 15; cursor: pointer; width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 26px; border: 2px solid rgba(255,255,255,0.4); }
+        #phone-modal { position: absolute; inset: 40px 20px 20px auto; width: 300px; background: #161823; border-radius: 25px; border: 4px solid #333; z-index: 25; padding: 15px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+        #joystick-zone { position: absolute; bottom: 30px; right: 40px; width: 110px; height: 110px; background: rgba(255, 255, 255, 0.15); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; z-index: 10; touch-action: none; }
         #joystick-knob { position: absolute; top: 32px; left: 32px; width: 46px; height: 46px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 15px #ff0055; }
 
-        /* BOTÓN DE CÁMARA (GRABAR) */
-        #cam-btn { position: absolute; bottom: 25px; left: 35px; z-index: 10; background: #ff0055; padding: 14px 28px; border-radius: 30px; border: none; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 5px 20px rgba(255,0,85,0.4); }
+        #cam-btn { position: absolute; bottom: 30px; left: 40px; z-index: 10; background: #ff0055; padding: 14px 24px; border-radius: 30px; border: none; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; }
 
         #canvas-container { width: 100vw; height: 100vh; }
     </style>
@@ -52,31 +54,38 @@
 
     <div id="screen-start" class="screen">
         <h1 class="title-main">Youtubers World_</h1>
-        <button class="btn-action" onclick="openCreator()">COMENZAR</button>
+        <button id="btn-start" class="btn-action">COMENZAR</button>
     </div>
 
     <div id="screen-creator" class="screen hidden">
-        <h2 style="font-weight: 900; text-transform: uppercase; font-size: 20px;">Tienda de Creación</h2>
+        <div class="creator-title">Tienda de Creación de Personaje</div>
         <div class="creator-container">
             <div class="preview-box">
-                <span id="avatar-emoji" style="font-size: 90px;">🧍‍♀️</span>
-                <span id="check-icon" class="hidden" style="font-size: 40px;">✅</span>
+                <img id="avatar-preview" class="character-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=FemaleClay1&top[]=longHair&clothing[]=overall" alt="Personaje 3D">
             </div>
+
             <div class="options-box">
-                <div class="category-title">Datos del Canal</div>
+                <div class="category-title">Datos Principales</div>
                 <input type="text" id="creator-name" class="input-field" placeholder="Nombre del Creador">
                 <input type="text" id="channel-name" class="input-field" placeholder="Nombre del Canal">
 
-                <div class="category-title">Tipo de Cuerpo</div>
-                <button class="input-field" onclick="setGender('female')">👩 Femenino (Suave)</button>
-                <button class="input-field" onclick="setGender('male')">👨 Masculino (Suave)</button>
+                <div class="category-title">Fisionomía / Cuerpo</div>
+                <div class="grid-options">
+                    <div class="opt-btn active" onclick="setBody('female')">👩 Hembra</div>
+                    <div class="opt-btn" onclick="setBody('male')">👨 Varón</div>
+                    <div class="opt-btn" onclick="setBody('girl')">👧 Niña</div>
+                    <div class="opt-btn" onclick="setBody('boy')">👦 Niño</div>
+                </div>
 
-                <div class="category-title">Accesorios 3D</div>
-                <button class="input-field">🦩 Flotador Flamenco</button>
-                <button class="input-field">🦆 Patito de Goma</button>
-                <button class="input-field">👜 Bolso Pastel</button>
+                <div class="category-title">Accesorios Estilo 3D</div>
+                <div class="grid-options">
+                    <div class="opt-btn" onclick="setAccessory('flamenco')">🦩 Flamenco</div>
+                    <div class="opt-btn" onclick="setAccessory('patito')">🦆 Patito</div>
+                    <div class="opt-btn" onclick="setAccessory('bolso')">👜 Bolso</div>
+                    <div class="opt-btn" onclick="setAccessory('camara')">📷 Cámara</div>
+                </div>
 
-                <button class="btn-action" style="margin-top: 10px;" onclick="finishCreator()">¡Comenzar Carrera! ✅</button>
+                <button class="btn-action" style="margin-top: 15px; width: 100%; text-align: center;" onclick="finishCreator()">¡Comenzar Carrera! ✅</button>
             </div>
         </div>
     </div>
@@ -84,9 +93,9 @@
     <div id="phone-btn" onclick="togglePhone()">📱</div>
 
     <div id="phone-modal" class="hidden">
-        <h3 style="font-size: 15px; font-weight: 800; color: #ff0055;">📱 Mis Videos Grabados</h3>
-        <div id="videos-list" style="overflow-y: auto; display: flex; flex-direction: column; gap: 10px; max-height: 330px;">
-            <div style="font-size: 11px; color: #aaa; text-align: center; padding: 20px 0;">Aún no has grabado videos. Presiona "📹 Grabar Video" frente a la cámara.</div>
+        <h3 style="font-size: 15px; font-weight: 800; color: #ff0055;">📱 Videos Grabados</h3>
+        <div id="videos-list" style="overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+            <div style="font-size: 11px; color: #888;">No has grabado videos aún. Acércate a la cámara y presiona "Grabar".</div>
         </div>
     </div>
 
@@ -99,47 +108,51 @@
     <div id="canvas-container"></div>
 
 <script>
-    // FLUJO PANTALLAS
-    function openCreator() {
+    // EVENTO DE INICIO GARANTIZADO EN MÓVIL
+    const startBtn = document.getElementById('btn-start');
+    
+    function startHandler(e) {
+        if(e) e.preventDefault();
         document.getElementById('screen-start').classList.add('hidden');
         document.getElementById('screen-creator').classList.remove('hidden');
     }
 
-    function setGender(type) {
-        const emoji = document.getElementById('avatar-emoji');
-        emoji.innerText = (type === 'female') ? '🧍‍♀️' : '🧍‍♂️';
-        if (playerMesh) {
-            if(type === 'female') playerMesh.scale.set(0.9, 0.95, 0.9);
-            else playerMesh.scale.set(1, 1, 1);
-        }
+    startBtn.addEventListener('click', startHandler);
+    startBtn.addEventListener('touchstart', startHandler);
+
+    // CAMBIO DE AVATAR Y CUERPO
+    function setBody(type) {
+        const img = document.getElementById('avatar-preview');
+        if(type === 'female') img.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=FemaleClay1&top[]=longHair&clothing[]=overall";
+        if(type === 'male') img.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=MaleClay1&top[]=shortHair&clothing[]=hoodie";
+        if(type === 'girl') img.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=GirlClay1&top[]=pigtails&clothing[]=shirtCrewNeck";
+        if(type === 'boy') img.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=BoyClay1&top[]=shortFlat&clothing[]=shirtCrewNeck";
+    }
+
+    function setAccessory(acc) {
+        alert(`¡Accesorio ${acc} seleccionado!`);
     }
 
     function finishCreator() {
-        document.getElementById('check-icon').classList.remove('hidden');
-        setTimeout(() => {
-            document.getElementById('screen-creator').classList.add('hidden');
-            init3DWorld();
-        }, 1000);
+        document.getElementById('screen-creator').classList.add('hidden');
+        init3DWorld();
     }
 
     function togglePhone() {
         document.getElementById('phone-modal').classList.toggle('hidden');
     }
 
-    // LÓGICA Y MOTOR 3D REAL
-    let scene, camera, renderer, playerGroup, playerMesh, leftLeg, rightLeg, leftArm, rightArm;
+    // MOTOR 3D Y ANIMACIONES
+    let scene, camera, renderer, playerGroup, leftLeg, rightLeg, leftArm, rightArm;
     let moveVector = { x: 0, z: 0 };
     let isTalking = false;
     let walkCycle = 0;
     let videos = [];
 
     function init3DWorld() {
-        if(scene) return; // Evitar duplicar la escena
-
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x161823);
 
-        // Cámara superior en 3D
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 16, 12);
         camera.lookAt(0, 0, 0);
@@ -148,46 +161,32 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Luces estilo render suave
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
 
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
         dirLight.position.set(10, 20, 10);
         scene.add(dirLight);
 
-        // Terreno (Cisneros Pequeño - Habitación)
+        // Piso del Cisneros
         const floorGeo = new THREE.BoxGeometry(10, 0.4, 10);
         const floorMat = new THREE.MeshStandardMaterial({ color: 0x3a3d52, roughness: 0.3 });
         const floor = new THREE.Mesh(floorGeo, floorMat);
         floor.position.y = -0.2;
         scene.add(floor);
 
-        // Cámara de Grabación en el escenario
-        const camGroup = new THREE.Group();
-        const camBody = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.8, 0.8), new THREE.MeshStandardMaterial({ color: 0x222222 }));
-        const camLens = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.6), new THREE.MeshStandardMaterial({ color: 0x444444 }));
-        camLens.rotation.x = Math.PI / 2;
-        camLens.position.z = 0.5;
-        camGroup.add(camBody, camLens);
-        camGroup.position.set(0, 1, -3);
-        scene.add(camGroup);
-
-        // MODELO DE PERSONAJE ARTICULADO (Smooth Clay)
+        // Personaje 3D Articulado
         playerGroup = new THREE.Group();
-        const matBody = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, roughness: 0.2 });
+        const matBody = new THREE.MeshStandardMaterial({ color: 0xff0055, roughness: 0.2 });
 
-        // Cabeza
         const head = new THREE.Mesh(new THREE.SphereGeometry(0.55, 32, 32), matBody);
         head.position.y = 1.6;
         playerGroup.add(head);
 
-        // Torso
-        playerMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.3, 0.9), matBody);
-        playerMesh.position.y = 0.95;
-        playerGroup.add(playerMesh);
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.3, 0.9), matBody);
+        body.position.y = 0.95;
+        playerGroup.add(body);
 
-        // Brazos articulados
         const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.6);
         leftArm = new THREE.Mesh(armGeo, matBody);
         leftArm.position.set(-0.45, 1.1, 0);
@@ -195,7 +194,6 @@
         rightArm.position.set(0.45, 1.1, 0);
         playerGroup.add(leftArm, rightArm);
 
-        // Piernas articuladas
         const legGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.6);
         leftLeg = new THREE.Mesh(legGeo, matBody);
         leftLeg.position.set(-0.2, 0.3, 0);
@@ -209,7 +207,6 @@
         animate();
     }
 
-    // JOYSTICK FLOTANTE DERECHO
     function setupJoystick() {
         const zone = document.getElementById('joystick-zone');
         const knob = document.getElementById('joystick-knob');
@@ -239,20 +236,45 @@
         }
     }
 
-    // SISTEMA DE GRABACIÓN DE VIDEO
     function recordVideo() {
-        if(!playerGroup) return;
         isTalking = true;
-        playerGroup.rotation.y = Math.PI; // Mirar a la cámara
+        playerGroup.rotation.y = Math.PI;
 
         setTimeout(() => {
             isTalking = false;
             const channel = document.getElementById('channel-name').value || 'Mi Canal';
             const views = Math.floor(Math.random() * 500) + 50;
-            const likes = Math.floor(views * 0.8);
-            const dislikes = Math.floor(Math.random() * 12);
             
             videos.unshift({
-                title: `Video #${videos.length + 1} - ¡Mi Vida en${channel}!`,
-                stats: `👁️ ${views} vistas | 👍 ${likes} \vert{} 👎${dislikes}`,
-                comments: `💬 Fan1: "¡Súper divertido!" <br
+                title: `Video #${videos.length + 1} - ${channel}`,
+                stats: `👁️ ${views} vistas | 👍 ${Math.floor(views * 0.8)} | 👎 2`,
+                comments: `💬 Fan1: "¡Súper buen video!"`
+            });
+
+            renderVideos();
+            alert("¡Video grabado y subido a tu teléfono!");
+        }, 2500);
+    }
+
+    function renderVideos() {
+        const list = document.getElementById('videos-list');
+        list.innerHTML = '';
+        videos.forEach(v => {
+            list.innerHTML += `
+                <div style="background:#222436; padding:8px; border-radius:10px; font-size:11px;">
+                    <b>${v.title}</b>
+                    <div>${v.stats}</div>
+                    <div style="color:#00ffcc;">${v.comments}</div>
+                </div>
+            `;
+        });
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        const isMoving = moveVector.x !== 0 || moveVector.z !== 0;
+
+        if (isMoving) {
+            playerGroup.position.x += moveVector.x * 0.12;
+            player
