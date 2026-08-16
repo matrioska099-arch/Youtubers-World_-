@@ -10,23 +10,23 @@
         body { background: linear-gradient(135deg, #2b5876, #4e4376); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; color: #333; }
         
         .game-card { background: #ffffff; width: 100%; max-width: 850px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column; }
-        .header { background: #ff0055; color: white; text-align: center; padding: 15px; font-family: 'Fredoka One', cursive; font-size: 24px; letter-spacing: 1px; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
+        .header { background: #ff0055; color: white; text-align: center; padding: 15px; font-family: 'Fredoka One', cursive; font-size: 24px; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
         
-        /* CREADOR DE PERSONAJES */
         .creator-container { display: flex; flex-direction: column; padding: 20px; gap: 20px; }
         @media (min-width: 650px) { .creator-container { flex-direction: row; } }
         
-        .preview-area { flex: 1; background: #f0f4f8; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px dashed #cbd5e1; position: relative; }
-        .avatar-box { width: 220px; height: 320px; position: relative; }
-        .avatar-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .preview-area { flex: 1; background: url('https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=600&auto=format&fit=crop&q=80') center/cover; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px solid #cbd5e1; min-height: 350px; position: relative; }
+        .avatar-box { width: 180px; height: 300px; position: relative; background: rgba(255,255,255,0.2); border-radius: 16px; backdrop-filter: blur(5px); }
+        .avatar-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         
         .controls-area { flex: 1.2; display: flex; flex-direction: column; gap: 15px; }
         .category-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
         .cat-btn { background: #e2e8f0; border: none; padding: 10px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; color: #475569; transition: 0.2s; white-space: nowrap; font-size: 13px; }
         .cat-btn.active, .cat-btn:hover { background: #ff0055; color: white; transform: translateY(-2px); }
         
-        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 180px; overflow-y: auto; background: #f8fafc; padding: 10px; border-radius: 16px; border: 2px solid #e2e8f0; }
-        .opt-card { background: white; border: 2px solid #cbd5e1; border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; font-weight: 800; font-size: 12px; color: #334155; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 200px; overflow-y: auto; background: #f8fafc; padding: 10px; border-radius: 16px; border: 2px solid #e2e8f0; }
+        .opt-card { background: white; border: 2px solid #cbd5e1; border-radius: 12px; padding: 8px; text-align: center; cursor: pointer; font-weight: 800; font-size: 12px; color: #334155; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+        .opt-card img { width: 45px; height: 45px; object-fit: contain; }
         .opt-card:hover { border-color: #ff0055; color: #ff0055; background: #fff0f3; }
         
         .inputs-group { display: flex; flex-direction: column; gap: 10px; }
@@ -36,15 +36,13 @@
         .btn-action { background: #10b981; color: white; border: none; padding: 14px; border-radius: 12px; font-family: 'Fredoka One', cursive; font-size: 18px; cursor: pointer; transition: 0.2s; text-align: center; box-shadow: 0 4px 0 #059669; }
         .btn-action:active { transform: translateY(4px); box-shadow: none; }
         
-        /* DASHBOARD DEL JUEGO */
         .hidden { display: none !important; }
         .stats-header { background: #0f172a; color: white; padding: 15px 20px; display: flex; justify-content: space-around; font-family: 'Fredoka One', cursive; font-size: 16px; border-bottom: 4px solid #334155; }
-        .stat-item { display: flex; align-items: center; gap: 8px; }
         .stat-val { color: #facc15; }
         
         .dashboard-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
         .channel-info { display: flex; align-items: center; gap: 15px; background: #f1f5f9; padding: 15px; border-radius: 16px; }
-        .mini-avatar { width: 60px; height: 80px; position: relative; background: #cbd5e1; border-radius: 10px; overflow: hidden; transform: scale(0.6); margin: -15px; }
+        .mini-avatar-box { width: 70px; height: 100px; position: relative; background: #cbd5e1; border-radius: 12px; overflow: hidden; }
         
         .action-card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         .action-card h3 { font-family: 'Fredoka One', cursive; color: #1e293b; }
@@ -57,27 +55,26 @@
 <body>
 
 <div class="game-card">
-    <div class="header">🎬 YOUTUBER STUDIO</div>
+    <div class="header">🎬 YOUTUBER LIFE STUDIO</div>
 
     <!-- PANTALLA 1: CREADOR DE PERSONAJE -->
     <div id="screen-creator" class="creator-container">
         <div class="preview-area">
             <div class="avatar-box">
-                <!-- Capas SVG renderizadas dinámicamente -->
-                <svg id="svg-body" class="avatar-layer" viewBox="0 0 100 150"></svg>
-                <svg id="svg-clothes" class="avatar-layer" viewBox="0 0 100 150"></svg>
-                <svg id="svg-shoes" class="avatar-layer" viewBox="0 0 100 150"></svg>
-                <svg id="svg-hair" class="avatar-layer" viewBox="0 0 100 150"></svg>
-                <svg id="svg-acc" class="avatar-layer" viewBox="0 0 100 150"></svg>
+                <img id="img-body" class="avatar-layer" src="" alt="Cuerpo">
+                <img id="img-clothes" class="avatar-layer" src="" alt="Ropa">
+                <img id="img-hair" class="avatar-layer" src="" alt="Cabello">
+                <img id="img-shoes" class="avatar-layer" src="" alt="Zapatos">
+                <img id="img-acc" class="avatar-layer" src="" alt="Accesorios">
             </div>
         </div>
 
         <div class="controls-area">
             <div class="category-bar">
-                <button class="cat-btn active" onclick="loadCategory('gender')">👤 Estilo</button>
+                <button class="cat-btn active" onclick="loadCategory('gender')">👤 Modelo</button>
                 <button class="cat-btn" onclick="loadCategory('hair')">💇 Peinado</button>
                 <button class="cat-btn" onclick="loadCategory('clothes')">👗 Ropa</button>
-                <button class="cat-btn" onclick="loadCategory('shoes')">👟 Zapatos</button>
+                <button class="cat-btn" onclick="loadCategory('shoes')">👟 Calzado</button>
                 <button class="cat-btn" onclick="loadCategory('acc')">🎧 Extra</button>
             </div>
 
@@ -94,19 +91,19 @@
     <!-- PANTALLA 2: JUEGO / DASHBOARD -->
     <div id="screen-game" class="hidden">
         <div class="stats-header">
-            <div class="stat-item">👥 <span id="stat-subs" class="stat-val">0</span> Subs</div>
-            <div class="stat-item">👁️ <span id="stat-views" class="stat-val">0</span> Vistas</div>
-            <div class="stat-item">💰 $<span id="stat-money" class="stat-val">0</span></div>
+            <div>👥 <span id="stat-subs" class="stat-val">0</span> Subs</div>
+            <div>👁️ <span id="stat-views" class="stat-val">0</span> Vistas</div>
+            <div>💰 $<span id="stat-money" class="stat-val">0</span></div>
         </div>
 
         <div class="dashboard-body">
             <div class="channel-info">
-                <div class="mini-avatar">
-                    <svg id="mini-body" class="avatar-layer" viewBox="0 0 100 150"></svg>
-                    <svg id="mini-clothes" class="avatar-layer" viewBox="0 0 100 150"></svg>
-                    <svg id="mini-shoes" class="avatar-layer" viewBox="0 0 100 150"></svg>
-                    <svg id="mini-hair" class="avatar-layer" viewBox="0 0 100 150"></svg>
-                    <svg id="mini-acc" class="avatar-layer" viewBox="0 0 100 150"></svg>
+                <div class="mini-avatar-box">
+                    <img id="mini-body" class="avatar-layer" src="">
+                    <img id="mini-clothes" class="avatar-layer" src="">
+                    <img id="mini-hair" class="avatar-layer" src="">
+                    <img id="mini-shoes" class="avatar-layer" src="">
+                    <img id="mini-acc" class="avatar-layer" src="">
                 </div>
                 <div>
                     <h2 id="disp-channel">Mi Canal</h2>
@@ -131,52 +128,53 @@
 </div>
 
 <script>
-    // DIBUJOS SVG DE ROPA, PEINADOS Y DIVERSOS ESTILOS
+    // CATÁLOGO DE ILUSTRACIONES REALES (PNG TRANSPARENTES)
     const ASSETS = {
         gender: [
-            { id: 'f_adult', name: 'Mujer Adulta', svg: '<ellipse cx="50" cy="35" rx="14" ry="16" fill="#fbcfe8"/><rect x="44" y="50" width="12" height="30" fill="#fbcfe8"/><rect x="40" y="80" width="8" height="50" fill="#fbcfe8"/><rect x="52" y="80" width="8" height="50" fill="#fbcfe8"/>' },
-            { id: 'm_adult', name: 'Hombre Adulto', svg: '<ellipse cx="50" cy="35" rx="15" ry="17" fill="#fde047"/><rect x="42" y="51" width="16" height="32" fill="#fde047"/><rect x="41" y="82" width="8" height="48" fill="#fde047"/><rect x="51" y="82" width="8" height="48" fill="#fde047"/>' },
-            { id: 'kid', name: 'Niño / Niña', svg: '<ellipse cx="50" cy="40" rx="13" ry="14" fill="#fed7aa"/><rect x="44" y="53" width="12" height="25" fill="#fed7aa"/><rect x="42" y="77" width="7" height="40" fill="#fed7aa"/><rect x="51" y="77" width="7" height="40" fill="#fed7aa"/>' }
+            { id: 'f_adult', name: 'Chica Anime', img: 'https://api.dicebear.com/7.x/bottts/svg?seed=BaseF' },
+            { id: 'm_adult', name: 'Chico Anime', img: 'https://api.dicebear.com/7.x/bottts/svg?seed=BaseM' }
         ],
         hair: [
-            { id: 'hair_long', name: 'Largo Wave', svg: '<path d="M 32 35 C 32 15, 68 15, 68 35 C 72 55, 68 80, 65 90 C 60 70, 65 35, 50 30 C 35 35, 40 70, 35 90 C 32 80, 28 55, 32 35 Z" fill="#881337"/>' },
-            { id: 'hair_short', name: 'Corto Moderno', svg: '<path d="M 33 35 C 33 18, 67 18, 67 35 C 67 25, 60 22, 50 22 C 40 22, 33 25, 33 35 Z" fill="#1e293b"/>' },
-            { id: 'hair_afro', name: 'Rizado Afro', svg: '<circle cx="50" cy="32" r="22" fill="#451a03"/>' },
-            { id: 'hair_none', name: 'Sin Pelo', svg: '' }
+            { id: 'h_long', name: 'Largo Wave', img: 'https://api.dicebear.com/7.x/avataaars/svg?top[]=longHair&hairColor[]=brown' },
+            { id: 'h_bob', name: 'Corte Bob', img: 'https://api.dicebear.com/7.x/avataaars/svg?top[]=bob&hairColor[]=black' },
+            { id: 'h_curly', name: 'Rizado Volumen', img: 'https://api.dicebear.com/7.x/avataaars/svg?top[]=curly&hairColor[]=blonde' },
+            { id: 'h_none', name: 'Sin Cambios', img: '' }
         ],
         clothes: [
-            { id: 'c_dress', name: 'Vestido Elegante', svg: '<path d="M 40 52 L 60 52 L 68 95 L 32 95 Z" fill="#ec4899"/><rect x="42" y="52" width="16" height="15" fill="#db2777"/>' },
-            { id: 'c_casual', name: 'Polo + Short', svg: '<rect x="40" y="52" width="20" height="22" fill="#3b82f6"/><rect x="40" y="74" width="20" height="14" fill="#1e293b"/>' },
-            { id: 'c_suit', name: 'Traje Gamer', svg: '<rect x="38" y="52" width="24" height="28" fill="#10b981"/><line x1="50" y1="52" x2="50" y2="80" stroke="#047857" stroke-width="2"/><rect x="40" y="80" width="20" height="30" fill="#374151"/>' }
+            { id: 'c_dress', name: 'Vestido Chic', img: 'https://api.dicebear.com/7.x/avataaars/svg?clothes[]=overall' },
+            { id: 'c_casual', name: 'Short & Top', img: 'https://api.dicebear.com/7.x/avataaars/svg?clothes[]=shirtCrewNeck' },
+            { id: 'c_suit', name: 'Hoodie Streamer', img: 'https://api.dicebear.com/7.x/avataaars/svg?clothes[]=hoodie' }
         ],
         shoes: [
-            { id: 's_sneakers', name: 'Zapatillas', svg: '<rect x="38" y="125" width="10" height="8" rx="3" fill="#ef4444"/><rect x="52" y="125" width="10" height="8" rx="3" fill="#ef4444"/>' },
-            { id: 's_boots', name: 'Botas Altas', svg: '<rect x="39" y="115" width="9" height="18" fill="#78350f"/><rect x="52" y="115" width="9" height="18" fill="#78350f"/>' }
+            { id: 's_snk', name: 'Zapatillas Red', img: 'https://cdn-icons-png.flaticon.com/512/2589/2589901.png' },
+            { id: 's_boots', name: 'Botines', img: 'https://cdn-icons-png.flaticon.com/512/2742/2742674.png' }
         ],
         acc: [
-            { id: 'a_headset', name: 'Audífonos Gamer', svg: '<path d="M 32 32 A 18 18 0 0 1 68 32" stroke="#a855f7" stroke-width="4" fill="none"/><rect x="30" y="28" width="5" height="12" rx="2" fill="#a855f7"/><rect x="65" y="28" width="5" height="12" rx="2" fill="#a855f7"/>' },
-            { id: 'a_glasses', name: 'Lentes Cool', svg: '<rect x="37" y="32" width="11" height="8" rx="2" fill="#000"/><rect x="52" y="32" width="11" height="8" rx="2" fill="#000"/><line x1="48" y1="35" x2="52" y2="35" stroke="#000" stroke-width="2"/>' },
-            { id: 'a_none', name: 'Ninguno', svg: '' }
+            { id: 'a_headset', name: 'Audífonos Pink', img: 'https://cdn-icons-png.flaticon.com/512/3293/3293810.png' },
+            { id: 'a_glass', name: 'Lentes Fashion', img: 'https://cdn-icons-png.flaticon.com/512/881/881822.png' },
+            { id: 'a_none', name: 'Ninguno', img: '' }
         ]
     };
 
-    let currentConfig = { gender: 'f_adult', hair: 'hair_long', clothes: 'c_dress', shoes: 's_sneakers', acc: 'a_headset' };
+    let currentConfig = { gender: 'f_adult', hair: 'h_long', clothes: 'c_dress', shoes: 's_snk', acc: 'a_headset' };
     let stats = { subs: 0, views: 0, money: 0 };
 
     function renderAvatar() {
         ['gender', 'hair', 'clothes', 'shoes', 'acc'].forEach(cat => {
             const item = ASSETS[cat].find(x => x.id === currentConfig[cat]);
-            const targetId = cat === 'gender' ? 'svg-body' : `svg-${cat}`;
-            document.getElementById(targetId).innerHTML = item ? item.svg : '';
+            const url = item ? item.img : '';
+            
+            const targetId = cat === 'gender' ? 'img-body' : `img-${cat}`;
+            document.getElementById(targetId).src = url;
             
             const miniTarget = cat === 'gender' ? 'mini-body' : `mini-${cat}`;
-            if(document.getElementById(miniTarget)) document.getElementById(miniTarget).innerHTML = item ? item.svg : '';
+            if(document.getElementById(miniTarget)) document.getElementById(miniTarget).src = url;
         });
     }
 
     function loadCategory(cat) {
         document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        if(event) event.target.classList.add('active');
 
         const grid = document.getElementById('options-grid');
         grid.innerHTML = '';
@@ -184,7 +182,7 @@
         ASSETS[cat].forEach(item => {
             const card = document.createElement('div');
             card.className = 'opt-card';
-            card.innerHTML = `<span>${item.name}</span>`;
+            card.innerHTML = item.img ? `<img src="${item.img}"><span>${item.name}</span>` : `<span>${item.name}</span>`;
             card.onclick = () => {
                 currentConfig[cat] = item.id;
                 renderAvatar();
@@ -239,7 +237,6 @@
         document.getElementById('video-title').value = '';
     }
 
-    // Inicialización
     loadCategory('gender');
     renderAvatar();
 </script>
