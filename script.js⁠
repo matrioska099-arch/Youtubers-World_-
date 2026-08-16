@@ -1,0 +1,176 @@
+// ESTADO Y VARIABLES DEL JUEGO
+let player = {
+    name: "",
+    channel: "",
+    subs: 0,
+    views: 0,
+    money: 0,
+    energy: 100,
+    lightBought: false,
+    micBought: false,
+    goal1Reached: false,
+    goal2Reached: false
+};
+
+// 1. INICIAR EL JUEGO Y CREADOR DE PERSONAJE
+function startGame() {
+    const username = document.getElementById("username").value.trim();
+    const channelName = document.getElementById("channel-name").value.trim();
+
+    if (username === "" || channelName === "") {
+        alert("¡Por favor ingresa tu nombre y el nombre de tu canal!");
+        return;
+    }
+
+    player.name = username;
+    player.channel = channelName;
+
+    // Ocultar pantalla de creación y mostrar panel de juego
+    document.getElementById("character-creator").classList.add("hidden");
+    document.getElementById("game-dashboard").classList.remove("hidden");
+
+    updateStats();
+}
+
+// 2. ACTUALIZAR INTERFAZ Y ESTADÍSTICAS
+function updateStats() {
+    document.getElementById("stat-subs").innerText = player.subs.toLocaleString();
+    document.getElementById("stat-views").innerText = player.views.toLocaleString();
+    document.getElementById("stat-money").innerText = player.money.toLocaleString();
+    document.getElementById("stat-energy").innerText = player.energy + "%";
+}
+
+// 3. SISTEMA DE CREACIÓN Y ALGORITMO DE VIDEOS
+function createVideo() {
+    const titleInput = document.getElementById("video-title");
+    const title = titleInput.value.trim();
+    const category = document.getElementById("video-category").value;
+
+    if (title === "") {
+        alert("Escribe un título atractivo para tu video antes de publicar.");
+        return;
+    }
+
+    if (player.energy < 20) {
+        alert("¡Estás sin energía! Espera unos segundos a que tu energía se recupere.");
+        return;
+    }
+
+    // Costos de producción según temática
+    let cost = 0;
+    if (category === "retos") cost = 10;
+    if (category === "bromas") cost = 30;
+
+    if (player.money < cost) {
+        alert(`Necesitas $${cost} en tus fondos para producir un video de ${category}.`);
+        return;
+    }
+
+    // Deducir costos y energía
+    player.money -= cost;
+    player.energy -= 20;
+
+    // Multiplicadores por equipamiento
+    let multiplier = 1.0;
+    if (player.lightBought) multiplier += 0.3;
+    if (player.micBought) multiplier += 0.5;
+
+    // Algoritmo de probabilidad (Luck)
+    let luck = Math.random(); 
+    let newViews = 0;
+    let newSubs = 0;
+    let commentType = "";
+
+    if (luck > 0.82) { // VIDEO VIRAL (18% de probabilidad)
+        newViews = Math.floor((Math.random() * 400 + 150) * multiplier);
+        newSubs = Math.floor(Math.random() * 4) + 2; // De 2 a 5 suscriptores
+        commentType = "viral";
+    } else if (luck > 0.35) { // ÉXITO NORMAL (47% de probabilidad)
+        newViews = Math.floor((Math.random() * 70 + 20) * multiplier);
+        newSubs = Math.floor(Math.random() * 2); // 0 o 1 suscriptor
+        commentType = "normal";
+    } else { // POCO IMPULSO (35% de probabilidad)
+        newViews = Math.floor(Math.random() * 15 + 2);
+        newSubs = 0; // 0 suscriptores
+        commentType = "bad";
+    }
+
+    // Ingresos monetarios ($0.05 por vista)
+    let earnedMoney = Math.floor(newViews * 0.05);
+
+    player.views += newViews;
+    player.subs += newSubs;
+    player.money += earnedMoney;
+
+    // Reiniciar input y actualizar UI
+    titleInput.value = "";
+    updateStats();
+    addComment(title, commentType, newViews, newSubs, earnedMoney);
+    checkGoals();
+
+    // Recuperación paulatina de energía
+    setTimeout(() => {
+        if (player.energy < 100) {
+            player.energy = Math.min(100, player.energy + 10);
+            updateStats();
+        }
+    }, 4000);
+}
+
+// 4. GENERADOR DE COMENTARIOS
+function addComment(title, type, views, subs, money) {
+    const feed = document.getElementById("comments-feed");
+    const emptyMsg = feed.querySelector(".empty-msg");
+    if (emptyMsg) emptyMsg.remove();
+
+    let text = "";
+    if (type === "viral") {
+        text = `🔥 ¡VIDEO VIRAL! "${title}" alcanzó ${views} vistas, +${subs} subs y generó $${money}.`;
+    } else if (type === "normal") {
+        text = `👍 "${title}" logró ${views} vistas, +${subs} sub y $${money} de ganancias.`;
+    } else {
+        text = `😅 "${title}" tuvo poco alcance (${views} vistas, 0 subs). ¡Sigue intentándolo!`;
+    }
+
+    const commentEl = document.createElement("div");
+    commentEl.className = "comment";
+    commentEl.innerHTML = `<strong>@FanClub:</strong> ${text}`;
+    feed.prepend(commentEl);
+}
+
+// 5. TIENDA Y COMPRA DE EQUIPOS
+function buyItem(item, price) {
+    if (player.money < price) {
+        alert("No tienes suficientes fondos para realizar esta compra.");
+        return;
+    }
+
+    if (item === 'light' && player.lightBought) {
+        alert("Ya compraste el Aro de Luz LED.");
+        return;
+    }
+    if (item === 'mic' && player.micBought) {
+        alert("Ya compraste el Micrófono Profesional.");
+        return;
+    }
+
+    player.money -= price;
+
+    if (item === 'light') player.lightBought = true;
+    if (item === 'mic') player.micBought = true;
+
+    alert("🎉 ¡Excelente compra! La calidad visual y de audio de tus videos ha aumentado.");
+    updateStats();
+}
+
+// 6. METAS Y PREMIOS
+function checkGoals() {
+    if (player.subs >= 10 && !player.goal1Reached) {
+        player.goal1Reached = true;
+        player.money += 20;
+        alert("🏆 ¡META LOGRADA! Alcanzaste 10 Suscriptores. Premio recibido: +$20 Bono.");
+        const goalEl = document.getElementById("goal-1");
+        if (goalEl) goalEl.style.opacity = "0.5";
+        updateStats();
+    }
+}
