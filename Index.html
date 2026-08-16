@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTuber Simulator PRO</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- PANTALLA 1: CREADOR DE PERSONAJE -->
+    <div id="character-creator" class="card">
+        <h1>🚀 Crea tu Canal de YouTube</h1>
+        <p>Configura tu perfil para iniciar tu carrera como creador de contenido.</p>
+        
+        <div class="input-group">
+            <label for="username">Tu Nombre / Nickname:</label>
+            <input type="text" id="username" placeholder="Ej. Alex" maxlength="15">
+        </div>
+
+        <div class="input-group">
+            <label for="channel-name">Nombre de tu Canal:</label>
+            <input type="text" id="channel-name" placeholder="Ej. AlexTV" maxlength="20">
+        </div>
+
+        <button id="btn-start" onclick="startGame()">¡Iniciar mi Carrera!</button>
+    </div>
+
+    <!-- PANTALLA 2: DASHBOARD DEL JUEGO -->
+    <div id="game-dashboard" class="hidden">
+        <!-- BARRA SUPERIOR DE ESTADÍSTICAS -->
+        <header class="stats-bar">
+            <div class="stat"><span class="icon">👤</span> <strong id="stat-subs">0</strong> <small>Suscriptores</small></div>
+            <div class="stat"><span class="icon">👁️</span> <strong id="stat-views">0</strong> <small>Vistas Totales</small></div>
+            <div class="stat"><span class="icon">💰</span> $<strong id="stat-money">0</strong> <small>Fondos</small></div>
+            <div class="stat"><span class="icon">⚡</span> <strong id="stat-energy">100%</strong> <small>Energía</small></div>
+        </header>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+            <!-- PANEL IZQUIERDO: ACCIONES Y VIDEOS -->
+            <section class="panel">
+                <h2>🎥 Estudiar & Grabar</h2>
+                <div class="input-group">
+                    <label for="video-title">Título del Video:</label>
+                    <input type="text" id="video-title" placeholder="Ej. ¡Broma pesada a mi amigo!">
+                </div>
+
+                <div class="input-group">
+                    <label for="video-category">Categoría:</label>
+                    <select id="video-category">
+                        <option value="vlogs">Vlog Diario (Bajo costo / Éxito variable)</option>
+                        <option value="retos">Retos Extremos (Medio costo / Buen alcance)</option>
+                        <option value="bromas">Bromas (Alto costo / Puede volverse viral o fallar)</option>
+                    </select>
+                </div>
+
+                <button class="btn-action" onclick="createVideo()">🎬 Grabar y Publicar Video</button>
+
+                <h3>💬 Feed de Comentarios Recientes</h3>
+                <div id="comments-feed" class="comments-box">
+                    <p class="empty-msg">Aún no has publicado ningún video...</p>
+                </div>
+            </section>
+
+            <!-- PANEL DERECHO: TIENDA Y METAS -->
+            <section class="panel">
+                <h2>🛒 Tienda de Equipamiento</h2>
+                <div class="shop-items">
+                    <div class="shop-card">
+                        <div>
+                            <strong>💡 Aro de Luz LED</strong>
+                            <p>Mejora la calidad de tus videos.</p>
+                        </div>
+                        <button onclick="buyItem('light', 50)">$50</button>
+                    </div>
+                    <div class="shop-card">
+                        <div>
+                            <strong>🎙️ Micrófono Profesional</strong>
+                            <p>Aumenta la retención de audiencia.</p>
+                        </div>
+                        <button onclick="buyItem('mic', 150)">$150</button>
+                    </div>
+                </div>
+
+                <h2>🏆 Próximas Metas</h2>
+                <div id="goals-list">
+                    <div class="goal-item" id="goal-1">
+                        <span>🎯 Llegar a 10 Suscriptores</span>
+                        <small>Recompensa: +$20 Bono</small>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
 
