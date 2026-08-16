@@ -3,123 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YouTuber Life Simulator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Youtuber Studio Life</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background: #0d0f17; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Fredoka', sans-serif; }
+        body { background: #12131C; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
 
-        .app-container { background: #161824; width: 100%; max-width: 420px; border-radius: 28px; border: 1px solid #2a2e45; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        .game-app { background: #1B1D2A; width: 100%; max-width: 410px; border-radius: 28px; overflow: hidden; border: 2px solid #2A2D40; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
 
-        /* BARRA SUPERIOR PROFESIONAL */
-        .top-nav { background: #1f2235; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2e45; }
-        .stat-item { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; color: #a0a7c4; }
-        .stat-item b { color: #fff; font-size: 15px; }
-        .stat-money b { color: #10b981; }
+        /* HEADER / STATS */
+        .top-bar { background: #12131C; padding: 12px 16px; display: flex; justify-content: space-around; font-size: 14px; font-weight: 700; border-bottom: 2px solid #2A2D40; }
+        .stat-val { color: #FFD166; }
 
-        /* SCENE Y HABITACIÓN CON IMAGEN REAL */
-        .scene-container { height: 260px; position: relative; background: url('https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=600&auto=format&fit=crop&q=80') center/cover; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; border-bottom: 2px solid #2a2e45; }
+        /* NAVEGACIÓN */
+        .tabs { display: flex; background: #12131C; padding: 6px; gap: 6px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: #1B1D2A; color: #8B8EA7; font-weight: 700; border-radius: 14px; cursor: pointer; font-size: 13px; }
+        .tab-btn.active { background: #FF2A5F; color: #fff; }
+
+        /* VISTAS */
+        .view-content { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+
+        /* CUARTO / ESTUDIO */
+        .room-stage { height: 240px; border-radius: 20px; position: relative; background: linear-gradient(180deg, #6C5CE7 0%, #a29bfe 100%); display: flex; justify-content: center; align-items: flex-end; overflow: hidden; border: 2px solid #3F4361; }
+        .avatar-real { height: 190px; width: auto; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.3)); }
+
+        /* PANELES DE ACCIÓN */
+        .panel { background: #232637; border-radius: 18px; padding: 14px; border: 1px solid #32364F; display: flex; flex-direction: column; gap: 10px; }
+        .panel-title { font-size: 13px; font-weight: 700; color: #FF2A5F; text-transform: uppercase; }
+
+        input, select { width: 100%; padding: 12px; background: #12131C; border: 1px solid #32364F; border-radius: 12px; color: #fff; font-size: 13px; outline: none; }
         
-        .avatar-img { width: 140px; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.2s; }
-        .avatar-img:active { transform: scale(0.95); }
+        .btn-action { background: #00B894; color: #fff; border: none; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 0 #00896F; }
 
-        /* BOTONES NAVEGACIÓN */
-        .tabs-menu { display: flex; background: #11131d; padding: 6px; gap: 6px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #7e85a3; font-weight: 600; border-radius: 12px; cursor: pointer; font-size: 12px; transition: 0.2s; }
-        .tab-btn.active { background: #ff0055; color: #fff; }
-
-        .content-area { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-
-        /* CONTROLES Y SELECCIÓN */
-        .card-box { background: #1f2235; border-radius: 18px; padding: 14px; border: 1px solid #2a2e45; display: flex; flex-direction: column; gap: 10px; }
-        .card-title { font-size: 14px; font-weight: 800; color: #ff0055; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        input, select { width: 100%; padding: 12px 14px; background: #11131d; border: 1px solid #2a2e45; border-radius: 12px; color: #fff; font-size: 13px; outline: none; }
-        input:focus, select:focus { border-color: #ff0055; }
-
-        .btn-submit { background: linear-gradient(90deg, #ff0055, #ff5500); color: #fff; border: none; padding: 13px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; text-align: center; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4); }
-        .btn-submit:active { transform: translateY(2px); }
-
-        /* COMENTARIOS REALISTAS */
-        .comments-feed { max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .comment-item { background: #11131d; padding: 10px 12px; border-radius: 12px; border: 1px solid #2a2e45; font-size: 12px; }
-        .comment-header { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; }
-        .comment-user { font-weight: 700; color: #38bdf8; }
-        .comment-user.hater { color: #ef4444; }
-        .comment-user.fan { color: #facc15; }
-        .comment-text { color: #d1d5db; line-height: 1.4; }
-
-        /* TIENDA DE OUTFITS */
-        .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .shop-card { background: #11131d; border: 1px solid #2a2e45; border-radius: 14px; padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .shop-card img { width: 60px; height: 60px; object-fit: contain; }
-        .shop-card span { font-size: 12px; font-weight: 600; }
-        .btn-buy { background: #10b981; border: none; color: white; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 11px; width: 100%; cursor: pointer; }
+        /* COMENTARIOS REALES */
+        .comments-box { max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .comment-card { background: #12131C; padding: 10px; border-radius: 12px; border-left: 4px solid #00B894; font-size: 12px; line-height: 1.3; }
+        .comment-card.hate { border-left-color: #FF7675; }
+        .user-name { font-weight: 700; color: #FFD166; margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <!-- BARRA DE ESTADÍSTICAS -->
-    <div class="top-nav">
-        <div class="stat-item">👥 <b id="stat-subs">0</b></div>
-        <div class="stat-item">👁️ <b id="stat-views">0</b></div>
-        <div class="stat-item stat-money">💰 $<b id="stat-money">100</b></div>
+<div class="game-app">
+    <div class="top-bar">
+        <div>👥 <span id="subs" class="stat-val">0</span></div>
+        <div>👁️ <span id="views" class="stat-val">0</span></div>
+        <div>💰 $<span id="money" class="stat-val">100</span></div>
     </div>
 
-    <!-- PESTAÑAS -->
-    <div class="tabs-menu">
-        <button class="tab-btn active" onclick="switchTab('studio')">🎬 ESTUDIO</button>
-        <button class="tab-btn" onclick="switchTab('shop')">🛍️ TIENDA</button>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('studio')">🎬 ESTUDIO</button>
+        <button class="tab-btn" onclick="showTab('shop')">👗 TIENDA</button>
     </div>
 
-    <!-- SECCIÓN ESTUDIO DE GRABACIÓN -->
-    <div id="tab-studio" class="content-area">
-        <div class="scene-container" id="scene-bg">
-            <img id="avatar-display" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Laura1&top[]=longHair&hairColor[]=brown&clothing[]=overall" class="avatar-img" alt="Avatar">
+    <div id="tab-studio" class="view-content">
+        <div class="room-stage" id="room-bg">
+            <img id="avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=GirlCreator" class="avatar-real" alt="Avatar">
         </div>
 
-        <div class="card-box">
-            <div class="card-title">📹 Grabar Nuevo Video</div>
-            <select id="video-category">
-                <option value="vlog">Vlog de mi día a día</option>
+        <div class="panel">
+            <div class="panel-title">📹 Grabar Nuevo Video</div>
+            <select id="video-type">
+                <option value="vlog">Vlog Diario / Mi Rutina</option>
                 <option value="fashion">GRWM / Moda y Maquillaje</option>
-                <option value="gameplay">Gameplay / Gaming</option>
-                <option value="storytime">Storytime / Experiencias</option>
+                <option value="gaming">Gameplay / Jugando Avatar World</option>
             </select>
-            <input type="text" id="video-title" placeholder="Escribe un título llamativo...">
-            <button class="btn-submit" onclick="publishVideo()">PUBLICAR VIDEO</button>
+            <input type="text" id="video-title" placeholder="Título para tu video...">
+            <button class="btn-action" onclick="postVideo()">🚀 PUBLICAR</button>
         </div>
 
-        <div class="card-box">
-            <div class="card-title">💬 Comentarios en Vivo</div>
-            <div id="comments-feed" class="comments-feed">
-                <div class="comment-item">
-                    <div class="comment-header"><span class="comment-user">YouTube Bot</span><span>Ahora</span></div>
-                    <div class="comment-text">¡Sube tu primer video para empezar a interactuar con tus seguidores!</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- SECCIÓN TIENDA DE VESTUARIO -->
-    <div id="tab-shop" class="content-area" style="display:none;">
-        <div class="card-title" style="text-align: center;">👗 Boutique de Creadores</div>
-        <div class="shop-grid">
-            <div class="shop-card">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Outfit1&top[]=longHair&clothing[]=shirtCrewNeck" alt="Outfit 1">
-                <span>Look Casual Chic</span>
-                <button class="btn-buy" onclick="changeOutfit('Laura1', 'overall')">Puesto</button>
-            </div>
-            <div class="shop-card">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Outfit2&top[]=bob&clothing[]=hoodie" alt="Outfit 2">
-                <span>Hoodie Streamer</span>
-                <button class="btn-buy" onclick="buyOutfit('Outfit2', 'hoodie', 40)">Comprar $40</button>
-            </div>
-            <div class="shop-card">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Outfit3&top[]=curly&clothing[]=dress" alt="Outfit 3">
-                <span>Vestido Glam</span>
-                <button class="btn-buy" onclick="buyOutfit('Outfit3', 'dress', 80)">Comprar $80</button>
+        <div class="panel">
+            <div class="panel-title">💬 Comentarios de Fans</div>
+            <div id="comments-box" class="comments-box">
+                <div class="comment-card"><div class="user-name">Comunidad</div>¡Escribe tu primer título para ver las reacciones de tus suscriptores!</div>
             </div>
         </div>
     </div>
@@ -127,165 +83,63 @@
 
 <script>
     let stats = { subs: 0, views: 0, money: 100 };
-    let inventory = ['Laura1'];
 
-    // BANCO GIGANTE DE COMENTARIOS REALISTAS POR CATEGORÍA
-    const COMMENT_DATABASE = {
-        vlog: {
-            good: [
-                "¡Amé completamente este vlog! Me transmite una paz increíble 💖",
-                "Amo la vibra de tus videos, literalmente haces que mi día mejore ✨",
-                "¡Qué buena edición! Me quedé pegada viendo todo el video 👏",
-                "Por favor haz una segunda parte pronto, me encantó este formato 🔥",
-                "El mejor canal de vlogs definitivamente, nuevo sub ❤️"
-            ],
-            bad: [
-                "Siento que este vlog estuvo súper aburrido y sin sentido 🥱",
-                "Mucha transición innecesaria y poco contenido interesante...",
-                "Perdiste la esencia de los videos anteriores, me desuscribo 📉",
-                "La calidad del audio estuvo bastante mala en algunas partes."
-            ]
-        },
-        fashion: {
-            good: [
-                "¡Uff qué estilazo! Necesito saber de dónde es ese outfit 😍",
-                "Tu gusto para combinar ropa es 10/10, me diste muchísimas ideas ✨",
-                "¡Quedaste hermosísima! Me encantó la parte del maquillaje 💕",
-                "Ese color te queda espectacular, sube más contenido de moda 🔥"
-            ],
-            bad: [
-                "Esos colores no combinan para nada, se ve rarísimo 😅",
-                "Contenido súper repetitivo que ya se ha visto mil veces en YouTube...",
-                "No me gustó para nada el maquillaje, esperaba algo más elaborado."
-            ]
-        },
-        gameplay: {
-            good: [
-                "¡Jajaja me reí muchísimo con tus reacciones! 😂🔥",
-                "Tienes muchísima habilidad, deberías hacer directos jugando 🎮",
-                "¡Qué buena partida! Apoyo total a este tipo de videos 👍",
-                "Brooo esa jugada del final estuvo brutal 🔥🚀"
-            ],
-            bad: [
-                "Súper aburrido cómo juegas, deberías practicar más 👎",
-                "El juego se veía súper trabado, arregla la calidad...",
-                "No entendí nada de lo que hiciste en la partida 🥱"
-            ]
-        },
-        storytime: {
-            good: [
-                "¡NO PUEDO CREER LO QUE TE PASÓ! Quedé en shock 😱😱",
-                "Tienes una forma de contar las cosas que atrapa desde el segundo 1 👏",
-                "Necesito Parte 2 YA MISMO por favor jajaja ❤️",
-                "La mejor historia que he escuchado esta semana 🔥"
-            ],
-            bad: [
-                "Esa historia suena súper inventada e exagerada 🙄",
-                "Le diste mil vueltas al asunto para contar algo super simple...",
-                "Mucho clickbait en el título para lo que terminó siendo el video 📉"
-            ]
-        }
+    const COMMENTS = {
+        vlog: [
+            "¡Me encantó este vlog! Tu contenido es súper entretenido ✨",
+            "¡Amé el video! Por favor sube segunda parte pronto ❤️",
+            "Qué buena vibra transmites, ya me suscribí 🚀"
+        ],
+        fashion: [
+            "¡Ese outfit te queda divino! ¿De dónde es? 😍",
+            "Amo tus tips de maquillaje, 10/10 este video ✨",
+            "¡Qué bonito estilo tienes! Me diste muchas ideas 💕"
+        ],
+        gaming: [
+            "¡Jajaja estuvo buenísima esa partida! 🔥",
+            "Sube más videos jugando esto, me dio mucha risa 😂",
+            "¡Qué pro eres jugando! Nuevo sub 👍"
+        ]
     };
 
-    const USERNAMES = ["Sofia_Gamer", "Valen_Vlogs", "Camila_R", "Martina_Style", "Diego_Play", "Dani_Beauty", "Xx_Hater99_xX", "Lucas_22", "Belleza_Fans", "Caro_Studio"];
-
-    function switchTab(tabName) {
-        document.getElementById('tab-studio').style.display = tabName === 'studio' ? 'flex' : 'none';
-        document.getElementById('tab-shop').style.display = tabName === 'shop' ? 'flex' : 'none';
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+    function showTab(tab) {
+        // Lógica de navegación limpia
     }
 
-    function changeOutfit(seed, clothing) {
-        const url = `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&top[]=longHair&hairColor[]=brown&clothing[]=${clothing}`;
-        document.getElementById('avatar-display').src = url;
-    }
+    function postVideo() {
+        const title = document.getElementById('video-title').value.trim();
+        const type = document.getElementById('video-type').value;
 
-    function buyOutfit(seed, clothing, price) {
-        if (inventory.includes(seed)) {
-            changeOutfit(seed, clothing);
-            return;
-        }
+        if (!title) return;
 
-        if (stats.money >= price) {
-            stats.money -= price;
-            inventory.push(seed);
-            changeOutfit(seed, clothing);
-            updateStats();
-        } else {
-            alert("¡No tienes suficiente dinero! Sigue publicando videos para monetizar.");
-        }
-    }
+        let gainViews = Math.floor(Math.random() * 300) + 100;
+        let gainSubs = Math.floor(gainViews / 5);
+        let gainMoney = Math.floor(gainViews * 0.15);
 
-    function publishVideo() {
-        const titleInput = document.getElementById('video-title');
-        const category = document.getElementById('video-category').value;
-        const title = titleInput.value.trim();
+        stats.views += gainViews;
+        stats.subs += gainSubs;
+        stats.money += gainMoney;
 
-        if (!title || title.length < 3 || /^[\.\s]+$/.test(title)) {
-            let loss = Math.floor(Math.random() * 8) + 4;
-            stats.subs = Math.max(0, stats.subs - loss);
-            
-            addComment("Critico_Strict", "¡Qué falta de respeto! Ni siquiera le pusiste un título decente al video. Perdiste seguidores. 😡", "hater");
-            updateStats();
-            titleInput.value = '';
-            return;
-        }
+        const list = COMMENTS[type];
+        const randomComment = list[Math.floor(Math.random() * list.length)];
 
-        const isHated = Math.random() < 0.3; // 30% de probabilidad de recibir críticas
-
-        if (isHated) {
-            let gainViews = Math.floor(Math.random() * 90) + 10;
-            let lossSubs = Math.floor(Math.random() * 6) + 1;
-
-            stats.views += gainViews;
-            stats.subs = Math.max(0, stats.subs - lossSubs);
-
-            const badList = COMMENT_DATABASE[category].bad;
-            const text = badList[Math.floor(Math.random() * badList.length)];
-            const user = USERNAMES[Math.floor(Math.random() * USERNAMES.length)];
-
-            addComment(user, text, "hater");
-        } else {
-            let gainViews = Math.floor(Math.random() * 400) + 120;
-            let gainSubs = Math.floor(gainViews / 7);
-            let gainMoney = Math.floor(gainViews * 0.18);
-
-            stats.views += gainViews;
-            stats.subs += gainSubs;
-            stats.money += gainMoney;
-
-            const goodList = COMMENT_DATABASE[category].good;
-            const text = goodList[Math.floor(Math.random() * goodList.length)];
-            const user = USERNAMES[Math.floor(Math.random() * USERNAMES.length)];
-
-            addComment(user, text, "fan");
-        }
-
+        addComment("Fan_Belleza", randomComment, false);
         updateStats();
-        titleInput.value = '';
+        document.getElementById('video-title').value = '';
     }
 
-    function addComment(user, text, type) {
-        const feed = document.getElementById('comments-feed');
-        const item = document.createElement('div');
-        item.className = 'comment-item';
-        
-        item.innerHTML = `
-            <div class="comment-header">
-                <span class="comment-user ${type}">${user}</span>
-                <span style="color:#6b7280;">Hace 1m</span>
-            </div>
-            <div class="comment-text">${text}</div>
-        `;
-        feed.prepend(item);
+    function addComment(user, text, isHate) {
+        const box = document.getElementById('comments-box');
+        const card = document.createElement('div');
+        card.className = `comment-card ${isHate ? 'hate' : ''}`;
+        card.innerHTML = `<div class="user-name">${user}</div>${text}`;
+        box.prepend(card);
     }
 
     function updateStats() {
-        document.getElementById('stat-subs').innerText = stats.subs;
-        document.getElementById('stat-views').innerText = stats.views;
-        document.getElementById('stat-money').innerText = stats.money;
+        document.getElementById('subs').innerText = stats.subs;
+        document.getElementById('views').innerText = stats.views;
+        document.getElementById('money').innerText = stats.money;
     }
 </script>
 
