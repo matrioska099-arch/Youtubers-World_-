@@ -2,243 +2,303 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTuber Life Studio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Youtuber World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
-        body { background: linear-gradient(135deg, #2b5876, #4e4376); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; color: #333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #12131C; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+
+        #game-window { width: 100vw; height: 100vh; max-width: 450px; max-height: 850px; background: #1E202E; border-radius: 20px; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+        /* HEADER & STATS */
+        .top-bar { background: #181925; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2A2C3D; z-index: 10; }
+        .stat { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; }
+        .stat-val { color: #FFD166; font-family: 'Fredoka One', cursive; }
+
+        /* SCENES / MAP */
+        .viewport { flex: 1; position: relative; overflow: hidden; background: #252836; }
+        .scene { position: absolute; width: 100%; height: 100%; display: none; flex-direction: column; padding: 15px; }
+        .scene.active { display: flex; }
+
+        /* AVATAR INTERACTIVO */
+        .room-bg { flex: 1; background-size: cover; background-position: center; border-radius: 16px; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; border: 2px solid #323546; }
+        #studio-room { background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=600&auto=format&fit=crop&q=80'); }
+        #shop-room { background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=600&auto=format&fit=crop&q=80'); }
+
+        .character-container { width: 140px; height: 220px; position: relative; transition: transform 0.3s ease; }
+        .char-layer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; }
+
+        /* CONTROLES DE MOVIMIENTO */
+        .navigation-bar { background: #181925; padding: 10px; display: flex; justify-content: space-around; border-top: 2px solid #2A2C3D; z-index: 10; }
+        .nav-btn { background: #2A2C3D; border: none; color: #fff; padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .nav-btn.active { background: #FF4757; color: #fff; }
+
+        /* COMPONENTES DE INTERFAZ */
+        .card-panel { background: #2A2C3D; border-radius: 16px; padding: 15px; margin-top: 10px; }
+        .title-label { font-family: 'Fredoka One', cursive; font-size: 18px; margin-bottom: 10px; color: #FF4757; text-shadow: 1px 1px 0 #000; }
+
+        input, select { width: 100%; padding: 12px; background: #181925; border: 1px solid #323546; border-radius: 10px; color: #fff; font-size: 14px; margin-bottom: 10px; outline: none; }
         
-        .game-card { background: #ffffff; width: 100%; max-width: 850px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column; }
-        .header { background: #ff0055; color: white; text-align: center; padding: 15px; font-family: 'Fredoka One', cursive; font-size: 24px; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
-        
-        .creator-container { display: flex; flex-direction: column; padding: 20px; gap: 20px; }
-        @media (min-width: 650px) { .creator-container { flex-direction: row; } }
-        
-        .preview-area { flex: 1; background: url('https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=600&auto=format&fit=crop&q=80') center/cover; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px solid #cbd5e1; min-height: 350px; position: relative; }
-        .avatar-box { width: 180px; height: 300px; position: relative; background: rgba(255,255,255,0.2); border-radius: 16px; backdrop-filter: blur(5px); }
-        .avatar-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-        
-        .controls-area { flex: 1.2; display: flex; flex-direction: column; gap: 15px; }
-        .category-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
-        .cat-btn { background: #e2e8f0; border: none; padding: 10px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; color: #475569; transition: 0.2s; white-space: nowrap; font-size: 13px; }
-        .cat-btn.active, .cat-btn:hover { background: #ff0055; color: white; transform: translateY(-2px); }
-        
-        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 200px; overflow-y: auto; background: #f8fafc; padding: 10px; border-radius: 16px; border: 2px solid #e2e8f0; }
-        .opt-card { background: white; border: 2px solid #cbd5e1; border-radius: 12px; padding: 8px; text-align: center; cursor: pointer; font-weight: 800; font-size: 12px; color: #334155; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
-        .opt-card img { width: 45px; height: 45px; object-fit: contain; }
-        .opt-card:hover { border-color: #ff0055; color: #ff0055; background: #fff0f3; }
-        
-        .inputs-group { display: flex; flex-direction: column; gap: 10px; }
-        .inputs-group input { padding: 12px 15px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 14px; font-weight: 600; outline: none; }
-        .inputs-group input:focus { border-color: #ff0055; }
-        
-        .btn-action { background: #10b981; color: white; border: none; padding: 14px; border-radius: 12px; font-family: 'Fredoka One', cursive; font-size: 18px; cursor: pointer; transition: 0.2s; text-align: center; box-shadow: 0 4px 0 #059669; }
-        .btn-action:active { transform: translateY(4px); box-shadow: none; }
-        
-        .hidden { display: none !important; }
-        .stats-header { background: #0f172a; color: white; padding: 15px 20px; display: flex; justify-content: space-around; font-family: 'Fredoka One', cursive; font-size: 16px; border-bottom: 4px solid #334155; }
-        .stat-val { color: #facc15; }
-        
-        .dashboard-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .channel-info { display: flex; align-items: center; gap: 15px; background: #f1f5f9; padding: 15px; border-radius: 16px; }
-        .mini-avatar-box { width: 70px; height: 100px; position: relative; background: #cbd5e1; border-radius: 12px; overflow: hidden; }
-        
-        .action-card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .action-card h3 { font-family: 'Fredoka One', cursive; color: #1e293b; }
-        
-        .feed-box { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 10px; max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .comment-item { font-size: 13px; background: #f1f5f9; padding: 8px 12px; border-radius: 8px; color: #334155; }
-        .comment-item strong { color: #ff0055; }
+        .action-btn { width: 100%; padding: 14px; background: #FF4757; border: none; border-radius: 12px; color: #fff; font-family: 'Fredoka One', cursive; font-size: 16px; cursor: pointer; box-shadow: 0 4px 0 #D63031; }
+        .action-btn:active { transform: translateY(3px); box-shadow: none; }
+
+        /* FEED DE COMENTARIOS MEJORADO */
+        .feed-container { max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .comment-card { background: #181925; padding: 10px; border-radius: 10px; font-size: 12px; border-left: 4px solid #00B894; }
+        .comment-card.negative { border-left-color: #FF7675; }
+        .comment-author { font-weight: 700; font-size: 11px; margin-bottom: 2px; color: #DFE6E9; }
+
+        /* TIENDA DE ROPA */
+        .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-height: 250px; overflow-y: auto; }
+        .shop-item { background: #181925; border: 2px solid #323546; border-radius: 12px; padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .shop-item.owned { border-color: #00B894; }
+        .buy-btn { background: #00B894; border: none; color: #fff; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; width: 100%; cursor: pointer; }
+
+        /* AVATAR STYLE SVG REALISTA */
+        .svg-avatar { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
-<div class="game-card">
-    <div class="header">🎬 YOUTUBER LIFE STUDIO</div>
-
-    <!-- PANTALLA 1: CREADOR DE PERSONAJE -->
-    <div id="screen-creator" class="creator-container">
-        <div class="preview-area">
-            <div class="avatar-box">
-                <img id="img-body" class="avatar-layer" src="" alt="Cuerpo">
-                <img id="img-clothes" class="avatar-layer" src="" alt="Ropa">
-                <img id="img-hair" class="avatar-layer" src="" alt="Cabello">
-                <img id="img-shoes" class="avatar-layer" src="" alt="Zapatos">
-                <img id="img-acc" class="avatar-layer" src="" alt="Accesorios">
-            </div>
-        </div>
-
-        <div class="controls-area">
-            <div class="category-bar">
-                <button class="cat-btn active" onclick="loadCategory('gender')">👤 Modelo</button>
-                <button class="cat-btn" onclick="loadCategory('hair')">💇 Peinado</button>
-                <button class="cat-btn" onclick="loadCategory('clothes')">👗 Ropa</button>
-                <button class="cat-btn" onclick="loadCategory('shoes')">👟 Calzado</button>
-                <button class="cat-btn" onclick="loadCategory('acc')">🎧 Extra</button>
-            </div>
-
-            <div id="options-grid" class="options-grid"></div>
-
-            <div class="inputs-group">
-                <input type="text" id="input-name" placeholder="Tu Nombre / Nickname">
-                <input type="text" id="input-channel" placeholder="Nombre de tu Canal">
-                <button class="btn-action" onclick="startGame()">🚀 ¡EMPEZAR CANAL!</button>
-            </div>
-        </div>
+<div id="game-window">
+    <!-- BARRA SUPERIOR DE ESTADÍSTICAS -->
+    <div class="top-bar">
+        <div class="stat">👥 <span id="stat-subs" class="stat-val">0</span></div>
+        <div class="stat">👁️ <span id="stat-views" class="stat-val">0</span></div>
+        <div class="stat">💰 $<span id="stat-money" class="stat-val">50</span></div>
     </div>
 
-    <!-- PANTALLA 2: JUEGO / DASHBOARD -->
-    <div id="screen-game" class="hidden">
-        <div class="stats-header">
-            <div>👥 <span id="stat-subs" class="stat-val">0</span> Subs</div>
-            <div>👁️ <span id="stat-views" class="stat-val">0</span> Vistas</div>
-            <div>💰 $<span id="stat-money" class="stat-val">0</span></div>
-        </div>
-
-        <div class="dashboard-body">
-            <div class="channel-info">
-                <div class="mini-avatar-box">
-                    <img id="mini-body" class="avatar-layer" src="">
-                    <img id="mini-clothes" class="avatar-layer" src="">
-                    <img id="mini-hair" class="avatar-layer" src="">
-                    <img id="mini-shoes" class="avatar-layer" src="">
-                    <img id="mini-acc" class="avatar-layer" src="">
-                </div>
-                <div>
-                    <h2 id="disp-channel">Mi Canal</h2>
-                    <p id="disp-name" style="color: #64748b; font-size: 14px;">Creador</p>
+    <!-- ÁREA PRINCIPAL / ESCENARIOS -->
+    <div class="viewport">
+        
+        <!-- HABITACIÓN / STUDIO -->
+        <div id="scene-studio" class="scene active">
+            <div class="room-bg" id="studio-room">
+                <div class="character-container" id="char-studio">
+                    <!-- AVATAR RENDERIZADO -->
                 </div>
             </div>
 
-            <div class="action-card">
-                <h3>📹 Grabar Nuevo Video</h3>
-                <input type="text" id="video-title" placeholder="Escribe el título de tu video..." style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
-                <button class="btn-action" onclick="publishVideo()">🎬 Publicar Video</button>
+            <div class="card-panel">
+                <div class="title-label">📹 Grabación de Video</div>
+                <input type="text" id="video-title" placeholder="Título del video...">
+                <select id="video-quality">
+                    <option value="low">Video Básico (Calidad Baja)</option>
+                    <option value="mid">Video Editado (Calidad Media)</option>
+                    <option value="high">Producción Pro (Calidad Alta)</option>
+                </select>
+                <button class="action-btn" onclick="publishVideo()">PUBLICAR VIDEO</button>
             </div>
 
-            <div class="action-card">
-                <h3>💬 Comentarios de Fans</h3>
-                <div id="feed-comments" class="feed-box">
-                    <div class="comment-item"><strong>Sistema:</strong> ¡Crea tu primer video para recibir comentarios!</div>
+            <div class="card-panel" style="padding: 10px;">
+                <div style="font-weight:700; font-size:12px; color:#A0A5B5;">FEED DE LA COMUNIDAD</div>
+                <div id="comments-feed" class="feed-container">
+                    <div class="comment-card"><div class="comment-author">Sistema</div>¡Escribe un buen título para empezar tu carrera!</div>
                 </div>
             </div>
         </div>
+
+        <!-- TIENDA DE ROPA -->
+        <div id="scene-shop" class="scene">
+            <div class="room-bg" id="shop-room">
+                <div class="character-container" id="char-shop">
+                    <!-- AVATAR RENDERIZADO EN TIENDA -->
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="title-label">🛍️ Boutique de Ropa</div>
+                <div class="shop-grid" id="shop-items">
+                    <!-- ARTÍCULOS DE LA TIENDA -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- NAVEGACIÓN ENTRE ESCENARIOS -->
+    <div class="navigation-bar">
+        <button class="nav-btn active" id="btn-nav-studio" onclick="switchScene('studio')">🎬 Set de Grabación</button>
+        <button class="nav-btn" id="btn-nav-shop" onclick="switchScene('shop')">🛍️ Ir a la Tienda</button>
     </div>
 </div>
 
 <script>
-    // CATÁLOGO DE ILUSTRACIONES REALES (PNG TRANSPARENTES)
-    const ASSETS = {
-        gender: [
-            { id: 'f_adult', name: 'Chica Anime', img: 'https://api.dicebear.com/7.x/bottts/svg?seed=BaseF' },
-            { id: 'm_adult', name: 'Chico Anime', img: 'https://api.dicebear.com/7.x/bottts/svg?seed=BaseM' }
-        ],
-        hair: [
-            { id: 'h_long', name: 'Largo Wave', img: 'https://api.dicebear.com/7.x/avataaars/svg?top[]=longHair&hairColor[]=brown' },
-            { id: 'h_bob', name: 'Corte Bob', img: 'https://api.dicebear.com/7.x/avataaars/svg?top[]=bob&hairColor[]=black' },
-            { id: 'h_curly', name: 'Rizado Volumen', img: 'https://api.dicebear.com/7.x/avataaars/svg?top[]=curly&hairColor[]=blonde' },
-            { id: 'h_none', name: 'Sin Cambios', img: '' }
-        ],
-        clothes: [
-            { id: 'c_dress', name: 'Vestido Chic', img: 'https://api.dicebear.com/7.x/avataaars/svg?clothes[]=overall' },
-            { id: 'c_casual', name: 'Short & Top', img: 'https://api.dicebear.com/7.x/avataaars/svg?clothes[]=shirtCrewNeck' },
-            { id: 'c_suit', name: 'Hoodie Streamer', img: 'https://api.dicebear.com/7.x/avataaars/svg?clothes[]=hoodie' }
-        ],
-        shoes: [
-            { id: 's_snk', name: 'Zapatillas Red', img: 'https://cdn-icons-png.flaticon.com/512/2589/2589901.png' },
-            { id: 's_boots', name: 'Botines', img: 'https://cdn-icons-png.flaticon.com/512/2742/2742674.png' }
-        ],
-        acc: [
-            { id: 'a_headset', name: 'Audífonos Pink', img: 'https://cdn-icons-png.flaticon.com/512/3293/3293810.png' },
-            { id: 'a_glass', name: 'Lentes Fashion', img: 'https://cdn-icons-png.flaticon.com/512/881/881822.png' },
-            { id: 'a_none', name: 'Ninguno', img: '' }
-        ]
+    // ESTADO DEL JUEGO
+    let gameState = {
+        subs: 0,
+        views: 0,
+        money: 50,
+        equipped: { body: '#FDCB6E', hair: '#6C5CE7', clothes: '#FF7675' },
+        inventory: ['c_basic']
     };
 
-    let currentConfig = { gender: 'f_adult', hair: 'h_long', clothes: 'c_dress', shoes: 's_snk', acc: 'a_headset' };
-    let stats = { subs: 0, views: 0, money: 0 };
+    // ROPA Y TIENDA
+    const shopCatalog = [
+        { id: 'c_pink', name: 'Vestido Rosa Chic', price: 30, color: '#FD79A8' },
+        { id: 'c_blue', name: 'Outfit Gamer Azul', price: 60, color: '#0984E3' },
+        { id: 'c_gold', name: 'Traje de Gala VIP', price: 150, color: '#FFD166' }
+    ];
 
-    function renderAvatar() {
-        ['gender', 'hair', 'clothes', 'shoes', 'acc'].forEach(cat => {
-            const item = ASSETS[cat].find(x => x.id === currentConfig[cat]);
-            const url = item ? item.img : '';
-            
-            const targetId = cat === 'gender' ? 'img-body' : `img-${cat}`;
-            document.getElementById(targetId).src = url;
-            
-            const miniTarget = cat === 'gender' ? 'mini-body' : `mini-${cat}`;
-            if(document.getElementById(miniTarget)) document.getElementById(miniTarget).src = url;
-        });
+    // GENERADOR DE AVATAR (VECTORIAL LIMPIO)
+    function generateAvatarSVG(colors) {
+        return `
+        <svg class="svg-avatar" viewBox="0 0 100 160">
+            <!-- SOMBRA -->
+            <ellipse cx="50" cy="150" rx="30" ry="6" fill="rgba(0,0,0,0.3)"/>
+            <!-- CUERPO / PIERNAS -->
+            <rect x="42" y="100" width="6" height="45" rx="3" fill="${colors.body}"/>
+            <rect x="52" y="100" width="6" height="45" rx="3" fill="${colors.body}"/>
+            <!-- ZAPATOS -->
+            <rect x="40" y="140" width="10" height="6" rx="2" fill="#2D3436"/>
+            <rect x="50" y="140" width="10" height="6" rx="2" fill="#2D3436"/>
+            <!-- ROPA -->
+            <path d="M 35 60 L 65 60 L 70 100 L 30 100 Z" fill="${colors.clothes}" rx="5"/>
+            <!-- CABEZA Y BRAZOS -->
+            <rect x="30" y="65" width="6" height="35" rx="3" fill="${colors.body}"/>
+            <rect x="64" y="65" width="6" height="35" rx="3" fill="${colors.body}"/>
+            <circle cx="50" cy="40" r="18" fill="${colors.body}"/>
+            <!-- ROSTRO -->
+            <circle cx="44" cy="38" r="2" fill="#2D3436"/>
+            <circle cx="56" cy="38" r="2" fill="#2D3436"/>
+            <path d="M 46 46 Q 50 50 54 46" stroke="#2D3436" stroke-width="1.5" fill="none"/>
+            <!-- CABELLO -->
+            <path d="M 30 38 C 30 18, 70 18, 70 38 C 72 55, 68 75, 65 80 C 60 60, 65 30, 50 25 C 35 30, 40 60, 35 80 C 32 75, 28 55, 30 38 Z" fill="${colors.hair}"/>
+        </svg>`;
     }
 
-    function loadCategory(cat) {
-        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-        if(event) event.target.classList.add('active');
-
-        const grid = document.getElementById('options-grid');
-        grid.innerHTML = '';
-
-        ASSETS[cat].forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'opt-card';
-            card.innerHTML = item.img ? `<img src="${item.img}"><span>${item.name}</span>` : `<span>${item.name}</span>`;
-            card.onclick = () => {
-                currentConfig[cat] = item.id;
-                renderAvatar();
-            };
-            grid.appendChild(card);
-        });
+    function renderAvatars() {
+        const svgHTML = generateAvatarSVG(gameState.equipped);
+        document.getElementById('char-studio').innerHTML = svgHTML;
+        document.getElementById('char-shop').innerHTML = svgHTML;
     }
 
-    function startGame() {
-        const name = document.getElementById('input-name').value;
-        const channel = document.getElementById('input-channel').value;
+    // CAMBIO DE ESCENARIO
+    function switchScene(sceneName) {
+        document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-        if (!name || !channel) {
-            alert('¡Por favor escribe tu nombre y el nombre de tu canal!');
+        document.getElementById(`scene-${sceneName}`).classList.add('active');
+        document.getElementById(`btn-nav-${sceneName}`).classList.add('active');
+    }
+
+    // ALGORITMO REALISTA DE PUBLICACIÓN DE VIDEOS
+    function publishVideo() {
+        const titleInput = document.getElementById('video-title');
+        const title = titleInput.value.trim();
+        const quality = document.getElementById('video-quality').value;
+
+        // VALIDACIÓN: TÍTULOS VACÍOS O SÓLO PUNTOS
+        if (!title || title.length < 3 || /^[\.\s]+$/.test(title)) {
+            addComment("Critico_01", "¡Qué video tan malo! El título ni siquiera tiene sentido. 😡", true);
+            
+            // Pérdida de suscriptores
+            let loss = Math.floor(Math.random() * 10) + 5;
+            gameState.subs = Math.max(0, gameState.subs - loss);
+            updateStats();
+            titleInput.value = '';
             return;
         }
 
-        document.getElementById('disp-name').innerText = name;
-        document.getElementById('disp-channel').innerText = channel;
+        // CÁLCULO DE ÉXITO BASADO EN CALIDAD Y AZAR
+        let baseMult = quality === 'low' ? 1 : (quality === 'mid' ? 2.5 : 5);
+        let isHated = Math.random() < 0.3; // 30% de probabilidad de recibir críticas variadas
 
-        document.getElementById('screen-creator').classList.add('hidden');
-        document.getElementById('screen-game').classList.remove('hidden');
-        renderAvatar();
+        if (isHated) {
+            let viewsGain = Math.floor(Math.random() * 100 * baseMult) + 20;
+            let subsLoss = Math.floor(Math.random() * 8) + 1;
+            
+            gameState.views += viewsGain;
+            gameState.subs = Math.max(0, gameState.subs - subsLoss);
+            
+            const badComments = [
+                `No me gustó para nada el video sobre "${title}". Perdiste un suscriptor. 👎`,
+                `Edición aburrida y contenido repetido. 🤮`,
+                `Un desastre de video, mejora la calidad. 📉`
+            ];
+            let comment = badComments[Math.floor(Math.random() * badComments.length)];
+            addComment("Hater_User", comment, true);
+        } else {
+            let viewsGain = Math.floor(Math.random() * 250 * baseMult) + 50;
+            let subsGain = Math.floor(viewsGain / 8);
+            let moneyGain = Math.floor(viewsGain * 0.1);
+
+            gameState.views += viewsGain;
+            gameState.subs += subsGain;
+            gameState.money += moneyGain;
+
+            const goodComments = [
+                `¡Excelente contenido sobre "${title}"! Sigue así 🔥`,
+                `¡Me encantó la edición de este video! Nuevo sub ❤️`,
+                `¡Tu canal está creciendo muy rápido! 🚀`
+            ];
+            let comment = goodComments[Math.floor(Math.random() * goodComments.length)];
+            addComment("Fan_Gamer", comment, false);
+        }
+
+        updateStats();
+        titleInput.value = '';
     }
 
-    function publishVideo() {
-        const title = document.getElementById('video-title').value;
-        if (!title) { alert('¡Escribe un título para tu video!'); return; }
-
-        const gainViews = Math.floor(Math.random() * 500) + 50;
-        const gainSubs = Math.floor(gainViews / 10);
-        const gainMoney = Math.floor(gainViews * 0.05);
-
-        stats.views += gainViews;
-        stats.subs += gainSubs;
-        stats.money += gainMoney;
-
-        document.getElementById('stat-views').innerText = stats.views;
-        document.getElementById('stat-subs').innerText = stats.subs;
-        document.getElementById('stat-money').innerText = stats.money;
-
-        const comments = [
-            `¡Increíble video sobre ${title}! 🔥`,
-            `Nuevo sub, me encantó tu canal ❤️`,
-            `¡Sigue subiendo más contenido! 🚀`,
-            `Buenardo el video de ${title} 👍`
-        ];
-        const randomComment = comments[Math.floor(Math.random() * comments.length)];
-
-        const feed = document.getElementById('feed-comments');
-        feed.innerHTML = `<div class="comment-item"><strong>Fan:</strong> ${randomComment}</div>` + feed.innerHTML;
-        document.getElementById('video-title').value = '';
+    function addComment(author, text, isNegative) {
+        const feed = document.getElementById('comments-feed');
+        const card = document.createElement('div');
+        card.className = `comment-card ${isNegative ? 'negative' : ''}`;
+        card.innerHTML = `<div class="comment-author">${author}</div>${text}`;
+        feed.prepend(card);
     }
 
-    loadCategory('gender');
-    renderAvatar();
+    function updateStats() {
+        document.getElementById('stat-subs').innerText = gameState.subs;
+        document.getElementById('stat-views').innerText = gameState.views;
+        document.getElementById('stat-money').innerText = gameState.money;
+        renderShop();
+    }
+
+    // TIENDA
+    function renderShop() {
+        const grid = document.getElementById('shop-items');
+        grid.innerHTML = '';
+
+        shopCatalog.forEach(item => {
+            const isOwned = gameState.inventory.includes(item.id);
+            const isEquipped = gameState.equipped.clothes === item.color;
+
+            const el = document.createElement('div');
+            el.className = `shop-item ${isOwned ? 'owned' : ''}`;
+            el.innerHTML = `
+                <div style="width:20px; height:20px; background:${item.color}; border-radius:50%;"></div>
+                <div style="font-size:11px; font-weight:700;">${item.name}</div>
+                <div style="font-size:10px; color:#A0A5B5;">${isOwned ? 'En propiedad' : '$' + item.price}</div>
+                <button class="buy-btn" onclick="handleShopAction('${item.id}', '${item.color}', ${item.price})">
+                    ${isEquipped ? 'Puesto' : (isOwned ? 'Equipar' : 'Comprar')}
+                </button>
+            `;
+            grid.appendChild(el);
+        });
+    }
+
+    function handleShopAction(id, color, price) {
+        if (!gameState.inventory.includes(id)) {
+            if (gameState.money >= price) {
+                gameState.money -= price;
+                gameState.inventory.push(id);
+                gameState.equipped.clothes = color;
+            } else {
+                alert("¡No tienes suficiente dinero! Graba más videos.");
+                return;
+            }
+        } else {
+            gameState.equipped.clothes = color;
+        }
+        updateStats();
+        renderAvatars();
+    }
+
+    // INICIALIZACIÓN
+    renderAvatars();
+    renderShop();
 </script>
 
 </body>
