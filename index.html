@@ -3,99 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTuber Simulator PRO</title>
-    <link rel="stylesheet" href="style.css">
+    <title>YouTuber Avatar Studio</title>
+    <link rel="stylesheet" href="style.css?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- PANTALLA 1: CREADOR DE PERSONAJE -->
-    <div id="character-creator" class="card">
-        <h1>🚀 Crea tu Canal de YouTube</h1>
-        <p>Configura tu perfil para iniciar tu carrera como creador de contenido.</p>
-        
-        <div class="input-group">
-            <label for="username">Tu Nombre / Nickname:</label>
-            <input type="text" id="username" placeholder="Ej. Alex" maxlength="15">
+    <div id="app-container">
+        <!-- PANTALLA DE CREACIÓN DE PERSONAJE -->
+        <div id="character-creator">
+            <h2>✨ Diseña tu YouTuber ✨</h2>
+            
+            <div class="creator-layout">
+                <!-- AVATAR INTERACTIVO -->
+                <div class="avatar-preview-box">
+                    <div id="avatar-display">
+                        <div id="layer-body" class="avatar-layer body-adult-f"></div>
+                        <div id="layer-hair" class="avatar-layer hair-1"></div>
+                        <div id="layer-clothes" class="avatar-layer clothes-dress"></div>
+                        <div id="layer-shoes" class="avatar-layer shoes-1"></div>
+                        <div id="layer-acc" class="avatar-layer acc-none"></div>
+                    </div>
+                </div>
+
+                <!-- PANEL DE CUSTOMIZACIÓN -->
+                <div class="customizer-panel">
+                    <!-- Categorías de personalización -->
+                    <div class="category-tabs">
+                        <button onclick="setTab('type')">👤 Tipo</button>
+                        <button onclick="setTab('hair')">💇‍♀️ Pelo</button>
+                        <button onclick="setTab('clothes')">👗 Ropa</button>
+                        <button onclick="setTab('shoes')">👟 Calzado</button>
+                        <button onclick="setTab('acc')">🎧 Extra</button>
+                    </div>
+
+                    <!-- Opciones que cambian según la pestaña -->
+                    <div id="options-container" class="options-grid">
+                        <!-- Se llena dinámicamente con JavaScript -->
+                    </div>
+
+                    <div class="inputs-box">
+                        <input type="text" id="username" placeholder="Tu Nombre / Nickname">
+                        <input type="text" id="channel-name" placeholder="Nombre de tu Canal">
+                        <button id="btn-start" onclick="startGame()">¡Comenzar Carrera!</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="input-group">
-            <label for="channel-name">Nombre de tu Canal:</label>
-            <input type="text" id="channel-name" placeholder="Ej. AlexTV" maxlength="20">
+        <!-- PANTALLA DEL JUEGO -->
+        <div id="game-dashboard" class="hidden">
+            <header class="stats-bar">
+                <div>👤 <span id="stat-subs">0</span> Subs</div>
+                <div>👁️ <span id="stat-views">0</span> Vistas</div>
+                <div>💰 $<span id="stat-money">0</span></div>
+            </header>
+            <main class="game-content">
+                <h3>🎬 Grabación de Contenido</h3>
+                <input type="text" id="video-title" placeholder="Título de tu video...">
+                <button onclick="createVideo()">Publicar Video</button>
+                <div id="comments-feed"></div>
+            </main>
         </div>
-
-        <button id="btn-start" onclick="startGame()">¡Iniciar mi Carrera!</button>
     </div>
 
-    <!-- PANTALLA 2: DASHBOARD DEL JUEGO -->
-    <div id="game-dashboard" class="hidden">
-        <!-- BARRA SUPERIOR DE ESTADÍSTICAS -->
-        <header class="stats-bar">
-            <div class="stat"><span class="icon">👤</span> <strong id="stat-subs">0</strong> <small>Suscriptores</small></div>
-            <div class="stat"><span class="icon">👁️</span> <strong id="stat-views">0</strong> <small>Vistas Totales</small></div>
-            <div class="stat"><span class="icon">💰</span> $<strong id="stat-money">0</strong> <small>Fondos</small></div>
-            <div class="stat"><span class="icon">⚡</span> <strong id="stat-energy">100%</strong> <small>Energía</small></div>
-        </header>
-
-        <!-- CONTENIDO PRINCIPAL -->
-        <main class="main-content">
-            <!-- PANEL IZQUIERDO: ACCIONES Y VIDEOS -->
-            <section class="panel">
-                <h2>🎥 Estudiar & Grabar</h2>
-                <div class="input-group">
-                    <label for="video-title">Título del Video:</label>
-                    <input type="text" id="video-title" placeholder="Ej. ¡Broma pesada a mi amigo!">
-                </div>
-
-                <div class="input-group">
-                    <label for="video-category">Categoría:</label>
-                    <select id="video-category">
-                        <option value="vlogs">Vlog Diario (Bajo costo / Éxito variable)</option>
-                        <option value="retos">Retos Extremos (Medio costo / Buen alcance)</option>
-                        <option value="bromas">Bromas (Alto costo / Puede volverse viral o fallar)</option>
-                    </select>
-                </div>
-
-                <button class="btn-action" onclick="createVideo()">🎬 Grabar y Publicar Video</button>
-
-                <h3>💬 Feed de Comentarios Recientes</h3>
-                <div id="comments-feed" class="comments-box">
-                    <p class="empty-msg">Aún no has publicado ningún video...</p>
-                </div>
-            </section>
-
-            <!-- PANEL DERECHO: TIENDA Y METAS -->
-            <section class="panel">
-                <h2>🛒 Tienda de Equipamiento</h2>
-                <div class="shop-items">
-                    <div class="shop-card">
-                        <div>
-                            <strong>💡 Aro de Luz LED</strong>
-                            <p>Mejora la calidad de tus videos.</p>
-                        </div>
-                        <button onclick="buyItem('light', 50)">$50</button>
-                    </div>
-                    <div class="shop-card">
-                        <div>
-                            <strong>🎙️ Micrófono Profesional</strong>
-                            <p>Aumenta la retención de audiencia.</p>
-                        </div>
-                        <button onclick="buyItem('mic', 150)">$150</button>
-                    </div>
-                </div>
-
-                <h2>🏆 Próximas Metas</h2>
-                <div id="goals-list">
-                    <div class="goal-item" id="goal-1">
-                        <span>🎯 Llegar a 10 Suscriptores</span>
-                        <small>Recompensa: +$20 Bono</small>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
 </body>
 </html>
-
