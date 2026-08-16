@@ -1,4 +1,4 @@
-// ESTADO Y VARIABLES DEL JUEGO
+// ESTADO Y VARIABLES DEL JUEGO 
 let player = {
     name: "",
     channel: "",
