@@ -3,137 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tienda 3D Isométrica</title>
+    <title>Youtubers World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { overflow: hidden; background: #1a1a1a; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; user-select: none; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
+
+        /* PANTALLAS FLOTANTES DE INTERFAZ */
+        .screen { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(15, 17, 26, 0.95); }
+        .hidden { display: none !important; }
+
+        /* PANTALLA INICIO */
+        .title-main { font-size: 42px; font-weight: 900; color: #ff0055; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,0,85,0.6); margin-bottom: 20px; }
+        .btn-start { background: linear-gradient(90deg, #ff0055, #ff5500); border: none; padding: 15px 40px; border-radius: 50px; font-weight: 800; font-size: 18px; color: #fff; cursor: pointer; box-shadow: 0 10px 25px rgba(255,0,85,0.5); }
+
+        /* PALOMITA VERDE CREADOR */
+        .check-badge { font-size: 50px; display: none; margin-top: 10px; animation: pop 0.3s ease; }
+        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+        /* JOYSTICK EN ESQUINA DERECHA */
+        #joystick-zone { position: absolute; bottom: 30px; right: 40px; width: 120px; height: 120px; background: rgba(255, 255, 255, 0.15); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; z-index: 5; touch-action: none; }
+        #joystick-knob { position: absolute; top: 35px; left: 35px; width: 50px; height: 50px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 15px #ff0055; }
+
+        /* HUD JUEGO */
+        .hud-bar { position: absolute; top: 15px; left: 20px; display: flex; gap: 20px; z-index: 5; background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .hud-item { font-size: 14px; font-weight: 800; }
+
         #canvas-container { width: 100vw; height: 100vh; }
-        
-        .ui-panel { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); color: #fff; padding: 12px 20px; border-radius: 12px; font-weight: bold; font-size: 16px; border: 1px solid rgba(255,255,255,0.2); }
-        .controls-hint { position: absolute; bottom: 20px; width: 100%; text-align: center; color: #fff; font-size: 14px; text-shadow: 0 2px 4px #000; }
     </style>
-    <!-- MOTOR THREE.JS PARA GRÁFICOS 3D REALES -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-<div class="ui-panel">💰 Dinero: $<span id="money">100</span></div>
-<div class="controls-hint">Toca o haz clic en el suelo para mover al personaje en 3D</div>
-<div id="canvas-container"></div>
+    <!-- 1. PANTALLA INICIO -->
+    <div id="screen-start" class="screen">
+        <h1 class="title-main">Youtubers World</h1>
+        <button class="btn-start" onclick="goToCreator()">COMENZAR</button>
+    </div>
+
+    <!-- 2. CREADOR DE PERSONAJE -->
+    <div id="screen-creator" class="screen hidden">
+        <h2>Crea tu Personaje</h2>
+        <br>
+        <button class="btn-start" onclick="confirmCharacter()">Confirmar Personaje</button>
+        <div id="creator-check" class="check-badge">✅</div>
+    </div>
+
+    <!-- HUD DEL JUEGO -->
+    <div class="hud-bar">
+        <div class="hud-item">👥 Subs: <span id="subs-count">0</span></div>
+        <div class="hud-item">💰 Money: $<span id="money-count">0</span></div>
+    </div>
+
+    <!-- CONTENEDOR 3D -->
+    <div id="canvas-container"></div>
+
+    <!-- JOYSTICK FLOTANTE DERECHO -->
+    <div id="joystick-zone">
+        <div id="joystick-knob"></div>
+    </div>
 
 <script>
-    // 1. CONFIGURACIÓN DE ESCENA 3D ISOMÉTRICA
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x2a2c39);
+    // FLUJO PANTALLAS
+    function goToCreator() {
+        document.getElementById('screen-start').classList.add('hidden');
+        document.getElementById('screen-creator').classList.remove('hidden');
+    }
 
-    const aspect = window.innerWidth / window.innerHeight;
-    const d = 10;
-    const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
-    
-    // Posición Isométrica
-    camera.position.set(20, 20, 20);
-    camera.lookAt(0, 0, 0);
+    function confirmCharacter() {
+        document.getElementById('creator-check').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('screen-creator').classList.add('hidden');
+            init3DGame();
+        }, 1200);
+    }
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    document.getElementById('canvas-container').appendChild(renderer.domElement);
+    // MOTOR 3D VISTA SUPERIOR
+    let scene, camera, renderer, player;
+    let moveVector = { x: 0, z: 0 };
 
-    // 2. ILUMINACIÓN 3D
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
+    function init3DGame() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0f111a);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    dirLight.position.set(15, 30, 10);
-    dirLight.castShadow = true;
-    scene.add(dirLight);
+        // Cámara Top-Down (Desde Arriba)
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 18, 12);
+        camera.lookAt(0, 0, 0);
 
-    // 3. SUELO / PISO DE LA TIENDA
-    const floorGeo = new THREE.BoxGeometry(14, 0.5, 14);
-    const floorMat = new THREE.MeshStandardMaterial({ color: 0xe0a96d });
-    const floor = new THREE.Mesh(floorGeo, floorMat);
-    floor.position.y = -0.25;
-    scene.add(floor);
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-    // 4. MOSTRADOR Y OSO DE PELUCHE 3D
-    const counterGeo = new THREE.BoxGeometry(4, 1.5, 2);
-    const counterMat = new THREE.MeshStandardMaterial({ color: 0xd9534f });
-    const counter = new THREE.Mesh(counterGeo, counterMat);
-    counter.position.set(0, 0.75, 2);
-    scene.add(counter);
+        // Iluminación Profesional
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambientLight);
 
-    // OSO EN 3D (Construido con formas volumétricas)
-    const bearGroup = new THREE.Group();
-    const bearMat = new THREE.MeshStandardMaterial({ color: 0xb05834 });
-    
-    const body = new THREE.Mesh(new THREE.SphereGeometry(0.8, 16, 16), bearMat);
-    body.position.y = 0.8;
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.6, 16, 16), bearMat);
-    head.position.y = 1.8;
+        const dirLight = new THREE.DirectionalLight(0xff0055, 0.8);
+        dirLight.position.set(10, 20, 10);
+        scene.add(dirLight);
 
-    bearGroup.add(body);
-    bearGroup.add(head);
-    bearGroup.position.set(0, 1.5, 2);
-    scene.add(bearGroup);
+        // Terreno inicial (Cisneros pequeño - Sección 1)
+        const floorGeo = new THREE.PlaneGeometry(12, 12);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x1f2235, roughness: 0.4 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        scene.add(floor);
 
-    // 5. PERSONAJE 3D (Estilo Stickman 3D)
-    const playerGroup = new THREE.Group();
-    const skinMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const clothesMat = new THREE.MeshStandardMaterial({ color: 0x337ab7 });
+        // Personaje Base (Se reemplazará con tus modelos 3D en PNG/GLTF)
+        const playerGroup = new THREE.Group();
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0xff0055 });
+        const pMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 1.8), bodyMat);
+        pMesh.position.y = 0.9;
+        playerGroup.add(pMesh);
+        
+        player = playerGroup;
+        scene.add(player);
 
-    const pHead = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), skinMat);
-    pHead.position.y = 1.8;
-    const pBody = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 1), clothesMat);
-    pBody.position.y = 0.9;
+        setupJoystick();
+        animate();
+    }
 
-    playerGroup.add(pHead);
-    playerGroup.add(pBody);
-    playerGroup.position.set(-3, 0, -3);
-    scene.add(playerGroup);
+    // LÓGICA JOYSTICK DERECHO
+    function setupJoystick() {
+        const zone = document.getElementById('joystick-zone');
+        const knob = document.getElementById('joystick-knob');
+        let active = false;
 
-    // MOVIMIENTO DEL PERSONAJE
-    let targetPos = playerGroup.position.clone();
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
+        zone.addEventListener('pointerdown', (e) => { active = true; handleMove(e); });
+        window.addEventListener('pointermove', (e) => { if(active) handleMove(e); });
+        window.addEventListener('pointerup', () => {
+            active = false;
+            knob.style.left = '35px';
+            knob.style.top = '35px';
+            moveVector = { x: 0, z: 0 };
+        });
 
-    window.addEventListener('pointerdown', (e) => {
-        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        function handleMove(e) {
+            const rect = zone.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            let dx = e.clientX - centerX;
+            let dy = e.clientY - centerY;
+            const dist = Math.min(Math.hypot(dx, dy), 40);
+            const angle = Math.atan2(dy, dx);
 
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObject(floor);
+            knob.style.left = `${35 + Math.cos(angle) * dist}px`;
+            knob.style.top = `${35 + Math.sin(angle) * dist}px`;
 
-        if (intersects.length > 0) {
-            targetPos = intersects[0].point;
-            targetPos.y = 0;
+            moveVector.x = (Math.cos(angle) * dist) / 40;
+            moveVector.z = (Math.sin(angle) * dist) / 40;
         }
-    });
+    }
 
-    // BUCLE DE ANIMACIÓN
     function animate() {
         requestAnimationFrame(animate);
-        
-        // Suavizar movimiento del personaje hacia donde se hace clic
-        playerGroup.position.lerp(targetPos, 0.05);
 
-        // Rotación continua del oso decorativo
-        bearGroup.rotation.y += 0.01;
+        if (player && (moveVector.x !== 0 || moveVector.z !== 0)) {
+            player.position.x += moveVector.x * 0.15;
+            player.position.z += moveVector.z * 0.15;
+            camera.position.x = player.position.x;
+            camera.position.z = player.position.z + 12;
+        }
 
         renderer.render(scene, camera);
     }
-    animate();
-
-    // Ajuste de pantalla
-    window.addEventListener('resize', () => {
-        const aspect = window.innerWidth / window.innerHeight;
-        camera.left = -d * aspect;
-        camera.right = d * aspect;
-        camera.top = d;
-        camera.bottom = -d;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
 </script>
-
 </body>
 </html>
